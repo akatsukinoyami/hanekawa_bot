@@ -8,30 +8,37 @@ import re
 
 app = Client("hebushek", api_id, api_hash)
 
-class chat:
-	def __init__(self, cond=1, lang='ru', nyan=0, greet=None):
+class chat_db:
+	def __init__(self, cond=1, lang='ru', mode='nyan', greet=None, nyan=0):
 		self.cond	= cond
 		self.lang	= lang
-		self.nyan	= nyan
+		self.mode	= mode
 		self.greet	= greet
+		self.nyan	= nyan
 
 @app.on_message(~Filters.user(chaos_id))
 def nyanpasu(Client, message):
 	msb = str(message.text)
 	msg = msb.lower()
-	chat_id = message.chat.id
+	chat_id = str(message.chat.id)
 	rp = message.reply
 	rnd = random.choice
-	
-#	with shelve.open(DB.py) as db:
-#		if chat_id not in db:
-#			db[chat_id] = Chat()
-#		rec_chat = [chat_id]
+	FILENAME = "DB"
 
-	for triggers, reaction in reacts['ru']['nyan'].items():
-		for trigger in triggers:
-			if re.search(r'\b'+trigger, msg):
-				rp(rnd(reaction))
+	with shelve.open(FILENAME) as db:
+		print(chat_id)
+		if chat_id not in db:
+			db[chat_id] = chat_db()
+		chat	= db[chat_id]
+		lang	= chat.lang
+		mode	= chat.mode
+		greet	= chat.greet
+		nyan	= chat.nyan
+		
+		for triggers, reaction in reacts[lang][mode].items():
+			for trigger in triggers:
+				if re.search(r'\b'+trigger, msg):
+					rp(rnd(reaction))
 
 	message.continue_propagation()
 
