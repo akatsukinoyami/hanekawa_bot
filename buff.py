@@ -3,7 +3,6 @@ from pyrogram import Client, MessageHandler, Filters
 from paste_bin import PasteBinApi as pastebin
 from googletrans import Translator
 from time import sleep as sleep
-from exchange import exchange
 import youtube_dl
 import random
 
@@ -12,7 +11,7 @@ translator = Translator()
 pst_api = pastebin(dev_api_pst)
 usr_key = pst_api.user_key(username=usrnm_pst, password=psswd_pst)
 
-@app.on_message(Filters.user("me"))
+@app.on_message(Filters.user("me") & (Filters.group | Filters.private))
 def buff(Client, message):
 	msb = str(message.text)
 	msg = msb.lower()
@@ -21,8 +20,7 @@ def buff(Client, message):
 	msg_id = message.message_id
 	ch_id = message.chat.id
 	edit = app.edit_message_text
-	translate = translator.translate
-	langs = ['en', 'ru', 'ua', 'jp', 'ch']
+
 	try:
 		rpl_id = message.reply_to_message.message_id
 		reply_user_id = str(message.reply_to_message.from_user.id)
@@ -45,29 +43,27 @@ def buff(Client, message):
 		edit(ch_id, msg_id, str(link))
 
 	elif '..в' in msg or '//to' in msg:
+		langs = ['en', 'ru', 'ua', 'jp', 'ch']
 		msgrp = msb.split()
 		trans_from = msb.replace('..в '+msgrp[1]+' ', '').replace('//to '+msgrp[1]+' ', '')
 		if msgrp[1] in langs:
-			trans_to = translate(trans_from, dest=msgrp[1])
+			trans_to = translator.translate(trans_from, dest=msgrp[1])
 			edit(ch_id, msg_id, trans_to.text)
 	
 	elif '..рп' in msg or '//rp' in msg or reply_user_id==chaos_id:
+		langs = ['en', 'ru', 'ua', 'jp', 'ch']
 		msgrp = msb.split()
 		if msgrp[1] in langs:
-			trans_to = translate(rp_msg, msgrp[1])
+			trans_to = translator.translate(rp_msg, msgrp[1])
 			edit(ch_id, msg_id, usr_name+'__\n\n'+trans_to.text)
 		else:
 			txt_rp_msg = str(usr_name +'\n__'+ str(rp_msg) +'__\n\n'+ msb)
 			edit(ch_id, msg_id, txt_rp_msg.replace("..рп ","").replace('//rp ', ''))
 
-	elif '..кв' in msg or '//ce' in msg:
-		txt_exch = exchange(msbs[2], msbs[3], msbs[1])
-		edit(ch_id, msg_id, txt_exch)
-
 	elif '..гл' in msg or '//gl' in msg:
-		txt1 = str(msg.replace("..гл ","").replace('//gl ',''))
-		txt_gl_msg = 'https://google.gik-team.com/?q=' + str(txt1.replace(" ", "+"))
-		edit(ch_id, msg_id, txt_gl_msg)
+		txt1 = str(msb.replace("..гл ","").replace('//gl ',''))
+		txt_gl_msg = '<a href=\"https://google.gik-team.com/?q='+str(txt1.replace(" ", "+"))+'\">'+txt1+'</a>'
+		edit(ch_id, msg_id, txt_gl_msg, disable_web_page_preview=True)
 
 	elif '..ю' in msg or '//yt' in msg:
 		txt_ydl_msg = str(msg.replace('..ю ', '').replace('//yt ', ''))
@@ -109,13 +105,9 @@ def buff(Client, message):
 			app.send_message(ch_id, mt)
 			n = n - 1
 		app.delete_messages(ch_id,msg_id)
-	
-	elif '//help_ex' in msg:
-		url_txt = '<a href="https://www.exchangerate-api.com/docs/supported-currencies"> Поддерживаемые валюты</a>'
-		edit(ch_id, msg_id, url_txt, disable_web_page_preview=True)
 
-	elif '..справка' in msg or '//help_b' in msg: 
-		edit(ch_id, msg_id, """**..справка** или **//help_b** - __эта справка__
+	elif '..справка' in msg or '//helpk' in msg: 
+		edit(ch_id, msg_id, """**..справка** или **//help_k** - __эта справка__
 **//help_ex** - __список поддерживаемых валют__
 **..рп** или **//rp** - __для злого реплая сообщения__
 **..рп "яз"** или **//rp "lang"** - __перевод реплая__
@@ -130,7 +122,6 @@ def buff(Client, message):
 **..спам n** или **//spam n** - __печатает n сообщений__
 **..паст код** или **//past код** - __отправить код в pastebin__ 
 **..в "яз"** или **//to "lang"** - __перевод сообщения на английский__
-**..кв** или **//ce число валюта-из валюта-в(auto)**
 """)
 
 	message.continue_propagation()
