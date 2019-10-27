@@ -1,6 +1,7 @@
 class Reply_message:
-	def __init__(self, code):
+	def __init__(self, code, attr='none'):
 		self.code = code
+		self.attr = attr
 	
 class T(Reply_message):
 	def reply(self, message):
@@ -18,23 +19,36 @@ ru_nyan = {
 ('awoo+', 'аву+') : (
 	T("Awoo =^o^= ~"), T('Awoo'), T('Авууу!')),
 ('му*р', 'пур+') : (
-	T('Мур'), T('Пурр'), T('Murrr'), T('Purrr')),
+	T('Мур', 'nyan'), 
+	T('Пурр', 'nyan'), 
+	T('Murrr', 'nyan'), 
+	T('Purrr', 'nyan')),
 ('ня+', 'ня+к', 'nya+', 'мя+у') : (
-	T('Ня ^_^'), T('Няяяя~'), T('Няу *-*'), T('Nya'), T('Мяу'),
-	S('CAADAgADaCkAAuCjggc25OCNdwABB-QWBA'),
-	S('CAADAQADnyMAAnj8xgU0Q-u3iNi_BhYE')),
+	T('Ня ^_^', 'nyan'), 
+	T('Няяяя~', 'nyan'), 
+	T('Няу *-*', 'nyan'), 
+	T('Nya', 'nyan'), 
+	T('Мяу', 'nyan'),
+	S('CAADAgADaCkAAuCjggc25OCNdwABB-QWBA', 'nyan'),
+	S('CAADAQADnyMAAnj8xgU0Q-u3iNi_BhYE', 'nyan')),
 ('ку+сь',) : (
 	T('Кусь, няха ^_^'), T('Кусь, б-бака >_<')),
 ('ли+зь',) : (
-	T("Лизь тебя <3"), T('*покраснела*')),
+	T("Лизь тебя <3", 'lewd'), 
+	T('*покраснела*', 'lewd')),
 ('ла+пк',) : (
-	S('CAADAgAD_GcAAuCjggcc4yEXnt2GTBYE'),),
+	S('CAADAgAD_GcAAuCjggcc4yEXnt2GTBYE', 'lewd'),),
 ('ра+вр+', 'ррр+', 'ra+wr+', 'rrr+') : (
-	T('Ррр!'), T('Равр!'), T('Rawr!'), T('Rrr!')),
+	T('Ррр!', 'angr'),
+	T('Равр!', 'angr'), 
+	T('Rawr!', 'angr'), 
+	T('Rrr!', 'angr')),
 ('тыгыдык',) : (
-	T('Тыгыдык!',)),
+	T('Тыгыдык!'),),
 ('ме+х','me+h') : (
 	T('Вздыхает'), T('Пушисто!')),
+('б+ульк', 'бу+ль') : (
+	T('Буууульк!'), T('Бууууль'), T('Буль-буль')),
 ('хз',) : (
 	T("Хрен знает!"),
 	S("CAADAgADxgADFTCdEMtnrnydTqyFFgQ"),
@@ -50,7 +64,7 @@ ru_nyan = {
 	S('CAADAgADuGcAAuCjggcEK4Wuw6OReBYE'),
 	S('CAADAgADsyUAAuCjggerF63AIh5OCRYE')),
 ('приве+т', 'здравствуй') : (
-	T('Приветствую'), T('Здравствуй'),
+	T('Приветствую'), T('Здравствуй'), T('Добро Пожаловать'),
 	S('CAADAgAD0mMAAuCjggfe1LWingZagRYE'),
 	S('CAADAgADkCUAAuCjggeCPV98a6NIvhYE'),
 	S('CAADAgADQikAAuCjggcJ3jT9RTZm-hYE')),
@@ -61,10 +75,11 @@ ru_nyan = {
 	T('*'+name+' включает кондиционер*')),
 ('холодно',) : (
 	T('*'+name+' укутывается в пледик*'), T('Бррр!'), 
-	T('*'+name+' дрожжит от холода*'), T('*'+name+' включает обогреватель*')),
+	T('*'+name+' дрожит от холода*'), T('*'+name+' включает обогреватель*')),
 ('тимур',) : (
-	T('*'+name+' прячется за занавеской* >_<'),
-	S('CAADAgADWCkAAuCjggdo5gnw-q-JfRYE'))}
+	T('Копай, бля!', 'scar'),
+	T('*'+name+' прячется за занавеской* >_<', 'scar'),
+	S('CAADAgADWCkAAuCjggdo5gnw-q-JfRYE', 'scar'))}
 
 ru_lewd ={
 ('акацуки',) : (
@@ -76,9 +91,9 @@ ru_lewd ={
 ('ла+пк',) : (
 	T('*'+name+' расстегивает пуговку расширяя декольте*'),),
 ('ня+', 'ня+к', 'nya+', 'мя+у') : (
-	T('Ня ^_^'), T('Няяяя~'), T('Няу *-*'), T('Nya'), T('Мяу')),
+	T('Ня ^_^'), T('Няяяя~'), T('Няу *-*'), T('Nya'), T('Мяяяяяу')),
 ('ку+сь',) : (
-	T('Кусь, няха ^_^'), T('*Нежно кусь за ушко*')),
+	T('Кусь, няха ^_^'), T('*Нежно кусь за ушко*'), T('*'+name+' аккуратно кусает шею*')),
 ('ли+зь',) : (
 	T("Лизь тебя в щечку"), T('*покраснела*'), T("Нежно лизь ушко")),
 ('це+м',) : (
@@ -95,10 +110,10 @@ ru_lewd ={
 	T('*'+name+' раздевается, чтобы охладится*')),
 ('холодно',) : (
 	T('*'+name+' шалит под котацу чтобы согрется*'), 
-	T('*'+name+' дрожжит от холода прикасающихся рук*'), 
+	T('*'+name+' дрожит от холода прикасающихся рук*'), 
 	T('*'+name+' греется, обнимая голышом*'),)}
 
-ru_brut = {
+ru_angr = {
 ('акацуки',) : (
 	T("Кто взывает к Рассвету Тьмы?"),),
 ('awoo+', 'аву+') : (
@@ -184,20 +199,20 @@ en_nyan = {
 	T('*'+name+' дрожжит от холода*'), T('*'+name+' включает обогреватель*')),}
 
 en_lewd = {}
-en_brut = {}
+en_angr = {}
 en_scar = {}
 
 reacts = {
 	'ru': {
 	'nyan':ru_nyan,
 	'lewd':ru_lewd,
-	'brut':ru_brut,
+	'angr':ru_angr,
 	'scar':ru_scar
 	},
 	'en': {
 	'nyan':en_nyan,
 	'lewd':en_lewd,
-	'brut':en_brut,
+	'angr':en_angr,
 	'scar':en_scar
 	}
 }

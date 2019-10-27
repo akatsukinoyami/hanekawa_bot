@@ -7,6 +7,11 @@ ru_service = {
 	'ch_mode'		: 'Режим изменен',
 	'er_mode'		: 'Ошибка изменения режима',
 	'perm_er'		: 'Как будто я тебе позволю',
+	'count'		: 'Показатели настроения: ',
+	'nyanc'			: 'Няшность: ',
+	'lewdc'			: 'Пошлость: ',
+	'angrc'			: 'Злость: ',
+	'scarc'			: 'Испуг: ',
 	'helpe'			: """//exch № валюта-из валюта-в(или auto)
 	//exch add валюта - добавить валюту в auto
 	//exch del валюта - удалить валюту из auto
@@ -31,6 +36,11 @@ en_service = {
 	'ch_mode'		: 'Changed mode successfully',
 	'er_mode'		: 'Inputed mode is wrong',
 	'perm_er'		: 'You have not permission to do that',
+	'count'		: 'Mood modificators: ',
+	'nyanc'			: 'Cuteness: ',
+	'lewdc'			: 'Lewdness: ',
+	'angrc'			: 'Anger: ',
+	'scarc'			: 'Scarness: ',
 	'helpe'			: """//exch "№" "from" "to"(or auto)
 	//exch add "currency" - add currency in auto
 	//exch del "currency" - delete currency from auto

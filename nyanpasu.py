@@ -12,55 +12,82 @@ with shelve.open('DB') as db:
 	app = Client("hebushek", api_id, api_hash)
 	
 	class chat_db:
-		def __init__(self, cond=1, lang='ru', mode='nyan', greet=None, nyac=0):
+		def __init__(self, cond=1, lang='ru', mode='nyan', greet=None, 
+		nyanc=0, lewdc = 0, angrc = 0, scarc = 0):
 			self.cond	= cond
 			self.lang	= lang
 			self.mode	= mode
 			self.greet	= greet
-			self.nyac	= nyac
-
+			self.nyanc	= nyanc
+			self.lewdc	= lewdc
+			self.angrc	= angrc
+			self.scarc	= scarc
+	
+	def replaier(reacts, lang, mode, chat, message, msg):
+		for triggers, reaction in reacts[lang][mode].items():
+					for trigger in triggers:
+						if re.search(r'\b'+trigger, msg):
+							a = random.choice(reaction)
+							a.reply(message)
+							if a.attr == 'nyan':
+								chat.nyanc += 1
+							elif a.attr == 'lewd':
+								chat.lewdc += 1
+							elif a.attr == 'angr':
+								chat.angrc += 1
+							elif a.attr == 'scar':
+								chat.scarc += 1
 
 	@app.on_message(~Filters.user(chaos_id) & (Filters.group | Filters.private))
 	def nyanpasu(Client, message):
-		msb = str(message.text)
-		msg = msb.lower()
-		msgs = msg.split()
 		chat_id = str(message.chat.id)
-		msg_id = int(message.message_id)
-		mmbr_id = str(message.from_user.id)
-		rp = message.reply
-		rnd = random.choice
-		for_nyac = ('ня+', 'ня+к', 'nya+', 'мя+у')
-		try:	user = app.get_chat_member(chat_id, mmbr_id)
-		except:	user=None
-		try:	reply_user_id = str(message.reply_to_message.from_user.id)
-		except:	reply_user_id = None
-
 		if chat_id not in db:
-			db[chat_id] = chat_db(cond=1, lang='ru', mode='nyan', greet=None, nyac=0)
+			db[chat_id] = chat_db(cond=1, lang='ru', mode='nyan', greet='Добро Пожаловать', 
+			nyanc=0, lewdc = 0, angrc = 0, scarc = 0)
 
 		chat	= db[chat_id]
 		cond	= chat.cond
 		lang	= chat.lang
 		mode	= chat.mode
 		greet	= chat.greet
-		nyac	= chat.nyac
+		nyanc	= chat.nyanc
+		lewdc	= chat.lewdc
+		angrc	= chat.angrc
+		scarc	= chat.scarc
 
-		if '//exch' in msg:
-			exch = Exchange()
-			if 'add' in msgs[1]:	res = 'Валюты в вашем списке:\n'+exch.exchange_add(msgs[2], str(mmbr_id))
-			if 'del' in msgs[1]:	rp(exch.exchange_del(msgs[2], str(mmbr_id)))
-			else:					rp(exch.exchange_run(msgs[2], msgs[3], msgs[1], str(mmbr_id)))
+		msb = str(message.text)
+		msg = msb.lower()
+		msgs = msg.split()
+		msg_id = int(message.message_id)
+		mmbr_id = str(message.from_user.id)
+		rp = message.reply
+		rnd = random.choice
+		service = eval(lang+'_service')
+		try:	user = app.get_chat_member(chat_id, mmbr_id)
+		except:	user=None
+		try:	reply_user_id = str(message.reply_to_message.from_user.id)
+		except:	reply_user_id = None
+				
+		if message.new_chat_members: rp(greet)
 
-		if message.new_chat_members:rp(greet)
-
-		elif '//count' in msg:		rp(chat.nyac)
+		elif '//count' in msb:		
+			rp(service['count']+'\n'+
+			service['nyanc']+str(nyanc)+'\n'+	
+			service['lewdc']+str(lewdc)+'\n'+
+			service['angrc']+str(angrc)+'\n'+
+			service['scarc']+str(scarc))
 		
-		elif '//help' in msg:		rp(service['help'])
+		elif '//help' in msg:	rp(service['help'])
 
 		elif '//help_exch' in msg:
 			url_txt = '<a href="https://www.exchangerate-api.com/docs/supported-currencies"> Поддерживаемые валюты</a>'
 			rp(url_txt+'\n'+service['helpe'], disable_web_page_preview=True)
+		
+		elif '//exch' in msg:
+			exch = Exchange()
+			if 'add' in msgs[1]:	rp(exch.exchange_add(msgs[2], str(mmbr_id)))
+			if 'del' in msgs[1]:	rp(exch.exchange_del(msgs[2], str(mmbr_id)))
+			else:					rp(exch.exchange_run(msgs[2], msgs[3], msgs[1], str(mmbr_id)))
 		
 		elif '..рмх' in msg or '//rmh' in msg or '//rma' in msg:
 			k = str(katsu_id)
@@ -74,27 +101,8 @@ with shelve.open('DB') as db:
 						app.delete_messages(chat_id, a)
 						n = n - 1
 						if n == 0: break
-		
-		elif chat.cond == 1:
-			if reply_user_id == str(nyanpasu_id) or reply_user_id == None:
-				for triggers, reaction in reacts[lang][mode].items():
-					for trigger in triggers:
-						if re.search(r'\b'+trigger, msg):
-							a = rnd(reaction)
-							a.reply(message)
-		elif chat.cond == 0:
-			if reply_user_id == str(nyanpasu_id) or nyanpasu_un in msg:
-				for triggers, reaction in reacts[lang][mode].items():
-					for trigger in triggers:
-						if re.search(r'\b'+trigger, msg):
-							a = rnd(reaction)
-							a.reply(message)
-
-#		elif '//debug' in msg:
-
-		if lang == 'ru':	service = ru_service
-		elif lang == 'en':	service = en_service
-		if message.chat.type == 'supergroup':
+				
+		elif message.chat.type == 'supergroup':
 			if mmbr_id == str(katsu_id) or user.status is 'administrator' or user.status is 'creator':
 				if '//greet' in msg:
 					greet_txt = msb.replace('//greet', '')
@@ -118,7 +126,7 @@ with shelve.open('DB') as db:
 						rp(service['er_lang'])
 				if '//mode' in msg:
 					mode_txt = msg.replace('//mode ', '')
-					modes = ('nyan', 'lewd', 'brut', 'scar')
+					modes = ('nyan', 'lewd', 'angr', 'scar')
 					if mode_txt in modes:
 						chat.mode = mode_txt
 						rp(service['ch_mode'])
@@ -127,6 +135,14 @@ with shelve.open('DB') as db:
 
 		elif '//greet' in msg or '//chat_on' in msg or '//chat_off' in msg or '//lang' in msg or '//mode' in msg:
 			rp(service['perm_er'])
+		
+		if chat.cond == 1:
+			if (reply_user_id == str(nyanpasu_id) or reply_user_id == None):
+				replaier(reacts, lang, mode, chat, message, msg)
+
+		elif chat.cond == 0: 
+			if (reply_user_id == str(nyanpasu_id) or nyanpasu_un in msg):
+				replaier(reacts, lang, mode, chat, message, msg)
 
 		db[chat_id] = chat
 		db.sync()

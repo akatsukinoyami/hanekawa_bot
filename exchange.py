@@ -20,7 +20,6 @@ class Exchange:
             with shelve.open(self.file) as db:
                 if mmbr_id not in db:
                     db[mmbr_id] = self.standart
-                    print(mmbr_id + ' добавлен в базу')
                 db_id = db[mmbr_id]
                 for i in db_id:
                     num = int(num)
@@ -41,7 +40,8 @@ class Exchange:
             count = db_id.count(base.upper())
             if count == 0:
                 db_id.append(base.upper())
-                added = ', '.join(db_id) 
+                add1 = ', '.join(db_id) 
+                added = 'Валюты в вашем списке:\n'+add1
             else:
                 added = 'Валюта уже есть в списке'
             db[mmbr_id] = db_id
@@ -55,7 +55,8 @@ class Exchange:
             db_id = db[mmbr_id]
             try:
                 db_id.remove(base.upper())
-                removed = ', '.join(db_id) 
+                remove = ', '.join(db_id) 
+                removed = 'Валюты в вашем списке:\n'+remove
             except ValueError:
                 removed = ('Валюты нет в списке')
             db[mmbr_id] = db_id
