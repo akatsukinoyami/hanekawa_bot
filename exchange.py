@@ -8,8 +8,14 @@ class Exchange:
     def exchange_run(self, base, dest, num, mmbr_id):
         r = requests.get('https://api.exchangerate-api.com/v4/latest/'+base.upper())
         exch_dict = eval(r.text)
+        dest = dest.upper()
 
-        if dest.lower() == 'auto':
+        if dest in self.currency:
+            rate = exch_dict['rates'][dest]
+            sum = float(num) * float(rate)
+            result = str(num) +' '+ base.upper() + ' = ' + str(round(sum)) + ' ' + dest
+            return result
+        else:
             rates_list = []
             with shelve.open(self.file) as db:
                 if mmbr_id not in db:
@@ -25,11 +31,6 @@ class Exchange:
                 db[mmbr_id] = db_id
                 return res    
 
-        else:
-            rate = exch_dict['rates'][dest]
-            sum = float(num) * float(rate)
-            result = str(num) +' '+ base + ' = ' + str(round(sum)) + ' ' + dest
-            return result
 
     def exchange_add(self, base, mmbr_id):
         mmbr_id = str(mmbr_id)

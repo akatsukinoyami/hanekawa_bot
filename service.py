@@ -12,7 +12,7 @@ ru_service = {
 	//exch del валюта - удалить валюту из auto
 	""",
 	'help'			: """//help - эта справка
-//helpe - справка по курсам валют
+//help_exch - справка по курсам валют
 //count - показать счетчик няшности
 Команды для администрации:
 //lang - изменить язык ответчика (ru, en)
@@ -36,6 +36,7 @@ en_service = {
 	//exch del "currency" - delete currency from auto
 	""",
 	'help'			: """//help - this help
+//help_exch - help for currency exchange
 //count - show nya-counter
 Admin commands:
 //lang - set up language (ru, en)

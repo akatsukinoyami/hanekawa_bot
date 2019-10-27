@@ -37,10 +37,48 @@ def buff(Client, message):
 		usr_name = None
 		reply_user_id = None
 
-	if '..паст' in msg or '//past' in msg:
+	if '//id' in msg:
+		if 'stick' in msg:
+			txt = ('Sticker set: '+message.reply_to_message.sticker.set_name +' '+ message.reply_to_message.sticker.emoji+'\n'+ 
+			'Stiker ID: '+message.reply_to_message.sticker.file_id)
+			edit(ch_id, msg_id, txt)
+		if 'msg' in msg:
+			txt = ('Chat ID: '+str(ch_id)+'\nUser ID: '+reply_user_id+'\nMessage ID: '+str(rpl_id))
+			edit(ch_id, msg_id, txt)
+
+	elif '//debug' in msg:
+		print(message)
+
+	elif '//sticker' in msg:
+		app.delete_messages(ch_id, msg_id)
+		app.send_sticker(ch_id, msbs[1])
+		
+	elif '..паст' in msg or '//past' in msg:
 		code = str(msb.replace('..паст ', '').replace('//past ', ''))
 		link = pst_api.paste(usr_key, raw_code=code, title=None, private=None, api_paste_format='python', expire_date=None)
 		edit(ch_id, msg_id, str(link))
+
+	elif '..ранд' in msg or '//rand' in msg:
+		rand = random.randint(int(msgs[1]), int(msgs[2]))
+		edit(ch_id, msg_id, "Рандомизирую между "+str(msgs[1])+" и "+str(msgs[2]))
+		sleep(3)
+		edit(ch_id, msg_id, 'Результат рандома: '+str(rand))
+
+	elif '..спам' in msg or '//spam' in msg:
+		n = int(msgs[1])
+		mt = msb.replace('..спам '+str(n), '').replace('//spam '+str(n), '')
+		while n != 0:
+			app.send_message(ch_id, mt)
+			n = n - 1
+		app.delete_messages(ch_id,msg_id)
+
+	elif '..рмх' in msg or '//rmh' in msg:
+		sleep(.050)
+		edit(ch_id, msg_id, "Удаляю")
+		sleep(1)
+		edit(ch_id, msg_id, "Удалено")		
+		sleep(2)
+		app.delete_messages(ch_id, msg_id)
 
 	elif '..в' in msg or '//to' in msg:
 		langs = ['en', 'ru', 'ua', 'jp', 'ch']
@@ -75,7 +113,7 @@ def buff(Client, message):
 		und_txt = '--'+str(msb.replace('..п ', '').replace('//ud ', ''))+'--'
 		edit(ch_id, msg_id, und_txt)
 
-	elif '..з' in msg or '//st' in msg:
+	elif '..з' in msg or '//st ' in msg:
 		stk_txt = '~~'+str(msb.replace('..з ', '').replace('//st ', ''))+'~~'
 		edit(ch_id, msg_id, stk_txt)
 
@@ -84,31 +122,8 @@ def buff(Client, message):
 		url_txt = '<a href="'+url_msg[2]+'">'+url_msg[1]+'</a>'
 		edit(ch_id, msg_id, url_txt, disable_web_page_preview=True)
 
-	elif '..рмх' in msg or '//rmh' in msg:
-		sleep(.050)
-		edit(ch_id, msg_id, "Удаляю")
-		sleep(1)
-		edit(ch_id, msg_id, "Удалено")		
-		sleep(2)
-		app.delete_messages(ch_id, msg_id)
-
-	elif '..ранд' in msg or '//rand' in msg:
-		rand = random.randint(int(msgs[1]), int(msgs[2]))
-		edit(ch_id, msg_id, "Рандомизирую между "+str(msgs[1])+" и "+str(msgs[2]))
-		sleep(3)
-		edit(ch_id, msg_id, 'Результат рандома: '+str(rand))
-
-	elif '..спам' in msg or '//spam' in msg:
-		n = int(msgs[1])
-		mt = msb.replace('..спам '+str(n), '').replace('//spam '+str(n), '')
-		while n != 0:
-			app.send_message(ch_id, mt)
-			n = n - 1
-		app.delete_messages(ch_id,msg_id)
-
 	elif '..справка' in msg or '//helpk' in msg: 
 		edit(ch_id, msg_id, """**..справка** или **//help_k** - __эта справка__
-**//help_ex** - __список поддерживаемых валют__
 **..рп** или **//rp** - __для злого реплая сообщения__
 **..рп "яз"** или **//rp "lang"** - __перевод реплая__
 **..гл** или **//gl** - __погуглить за человека__
@@ -118,28 +133,22 @@ def buff(Client, message):
 **..сс** или **//ur** - __оформить ссылку__
 **..рмх n** или **//rmh n** (где n - число) - __удаляет сообщения бота__
 **..рмк n** или **//rmk n** (где n - число) - __удаляет сообщения Кацу__
+**//rma** - __удаляет сообщения Кацу и бота__
 **..ранд n m** или **//rand n m** - __рандом от n до m__
 **..спам n** или **//spam n** - __печатает n сообщений__
 **..паст код** или **//past код** - __отправить код в pastebin__ 
 **..в "яз"** или **//to "lang"** - __перевод сообщения на английский__
+**//id stick** / **//id msg** - __выдает указанные ID__
+**//debug** - __выдает message в консоль__
 """)
 
-	message.continue_propagation()
-
-@app.on_message(Filters.user(katsu_id))
-def rm(Client, message):
-	msb = str(message.text)
-	msg = msb.lower()
-	chat_id	= message.chat.id
-
-	if '..рмк' in msg or '//rmk' in msg:
-		n = int(msg.replace('//rmk ','').replace('..рмк', '')) + 1
-		for message in app.iter_history(chat_id, 100):
+	elif '..рмк' in msg or '//rmk' in msg or '//rma' in msg:
+		n = int(msg.replace('//rma ','').replace('//rmk ','').replace('..рмк', '')) + 1
+		for message in app.iter_history(ch_id, 100):
 			if message.from_user.id == katsu_id:
 				a = message.message_id
-				app.delete_messages(chat_id, a)
+				app.delete_messages(ch_id, a)
 				sleep(.1)
 				n = n - 1
 				if n == 0: break
-
 app.run()
