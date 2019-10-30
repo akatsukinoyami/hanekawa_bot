@@ -2,6 +2,8 @@ ru_service = {
 	'rp_greet'		: 'Приветствие сохранено',
 	'rp_on'			: 'Ответчик для чата включен',
 	'rp_off'		: 'Ответчик для чата выключен',
+	'tts_on'		: 'Текст в речь включен',
+	'tts_off'		: 'Текст в речь выключен',
 	'ch_lang'		: 'Язык изменен',
 	'er_leng'		: 'Ошибка изменения языка',
 	'ch_mode'		: 'Режим изменен',
@@ -17,20 +19,28 @@ ru_service = {
 	//exch del валюта - удалить валюту из auto
 	""",
 	'help'			: """//help - эта справка
-//help_exch - справка по курсам валют
-//count - показать счетчик няшности
-Команды для администрации:
-//lang - изменить язык ответчика (ru, en)
-//lang - изменить режим ответчика (nyan, lewd, brut, scar)
+//help exch - справка по курсам валют
+//help admin - справка админ команд
+//count - показать счетчик настроений
+//tts "яз" - текст в речь
+//rand "от" "до" - рандом в промежутке
+//translate "яз" - перевести сообщ или реплай и:
+//trans "яз" или //tl "яз" 
+""",
+	'help_admin'	: """//lang - изменить язык ответчика (ru, en)
+//mode - изменить режим ответчика (nyan, lewd, brut, scar)
 //greet - указать приветствие новому учаснику
-//cond on - включить ответчик в чате
-//cond off - выключить ответчик в чате""",
+//cond on/off - вкл/выкл ответчик в чате
+//ttsm on/off - вкл/выкл текст-в-речь
+//set_zero - обнуляет счетчики настроения""",
 }
 
 en_service = {
 	'rp_greet'		: 'Greeting saved',
 	'rp_on'			: 'Reply reactions set on',
 	'rp_off'		: 'Reply reactions set off',
+	'tts_on'		: 'Text-to-speech set on',
+	'tts_off'		: 'Text-to-speech set off',
 	'ch_lang'		: 'Changed language successfully',
 	'er_leng'		: 'Inputed language is wrong',
 	'ch_mode'		: 'Changed mode successfully',
@@ -46,12 +56,19 @@ en_service = {
 	//exch del "currency" - delete currency from auto
 	""",
 	'help'			: """//help - this help
-//help_exch - help for currency exchange
-//count - show nya-counter
-Admin commands:
-//lang - set up language (ru, en)
+//help exch - help for currency exchange
+//help admin - help for admin functions
+//tts "lang" - text-to-speech
+//rand "fm" "to" - random in from to number
+//count - show mood-counter
+//translate "lang" - translate msg or reply
+//trans "lang" или //tl "lang" 
+""",
+	'help_admin'	: """//lang - set up language (ru, en)
 //lang - change mode of replier (nyan, lewd, brut, scar)
 //greet - set up greeting for new chat member
-//cond on - turn on replier
-//cond off - turn off replier""",
+//cond on/off - turn on/off replier
+//ttsm on/off - turn on/off text-to-speech
+//set_zero - set all modificators to zero
+""",
 }
