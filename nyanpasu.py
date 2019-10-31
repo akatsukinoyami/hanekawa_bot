@@ -4,6 +4,7 @@ from service import ru_service, en_service
 from googletrans import Translator
 from time import sleep as sleep
 from exchange import Exchange
+from mood import mood_func
 from words import reacts
 from gtts import gTTS
 import random
@@ -16,11 +17,12 @@ with shelve.open('DB') as db:
 	translator = Translator()
 	
 	class chat_db:
-		def __init__(self, cond=1, lang='ru', mode='nyan', ttsm = 0, greet=None, 
+		def __init__(self, cond=0, nsfw=0, lang='ru', mood='nyan', ttsm = 0, greet=None, 
 		nyanc=[], lewdc = [], angrc = [], scarc = []):
 			self.cond	= cond
+			self.nsfw	= nsfw
 			self.lang	= lang
-			self.mode	= mode
+			self.mood	= mood
 			self.ttsm	= ttsm
 			self.greet	= greet
 			self.nyanc	= nyanc
@@ -28,34 +30,30 @@ with shelve.open('DB') as db:
 			self.angrc	= angrc
 			self.scarc	= scarc
 	
-	def replaier(reacts, lang, mode, chat, message, msg):
-		for triggers, reaction in reacts[lang][mode].items():
+	def replaier(reacts, lang, mood, chat, message, msg):
+		for triggers, reaction in reacts[lang][mood].items():
 					for trigger in triggers:
 						if re.search(r'\b'+trigger, msg):
 							a = random.choice(reaction)
 							a.reply(message)
+							now = round(time.time())
 							if a.attr == 'nyan':
-								chat.nyanc.append(round(time.time()))
+								chat.nyanc.append(now)
 							elif a.attr == 'lewd':
-								chat.lewdc.append(round(time.time()))
+								chat.lewdc.append(now)
 							elif a.attr == 'angr':
-								chat.angrc.append(round(time.time()))
+								chat.angrc.append(now)
 							elif a.attr == 'scar':
-								chat.scarc.append(round(time.time()))
+								chat.scarc.append(now)
 
 	@app.on_message(~Filters.user(chaos_id) & (Filters.group | Filters.private))
 	def nyanpasu(Client, message):
 		chat_id = str(message.chat.id)
 		if chat_id not in db:
-			db[chat_id] = chat_db(cond=1, lang='ru', mode='nyan', ttsm = 0, greet='Добро Пожаловать', 
+			db[chat_id] = chat_db(cond=0, nsfw=0, lang='ru', mood='nyan', ttsm = 0, greet='Добро Пожаловать', 
 			nyanc=[], lewdc = [], angrc = [], scarc = [])
 
 		chat	= db[chat_id]
-		cond	= chat.cond
-		lang	= chat.lang
-		mode	= chat.mode
-		ttsm	= chat.ttsm
-		greet	= chat.greet
 		nyanc	= chat.nyanc
 		lewdc	= chat.lewdc
 		angrc	= chat.angrc
@@ -68,7 +66,7 @@ with shelve.open('DB') as db:
 		mmbr_id = str(message.from_user.id)
 		rp = message.reply
 		rnd = random.choice
-		service = eval(lang+'_service')
+		service = eval(chat.lang+'_service')
 		try:	user = app.get_chat_member(chat_id, mmbr_id)
 		except:	user=None
 		try:	reply_user_id = str(message.reply_to_message.from_user.id)
@@ -88,16 +86,36 @@ with shelve.open('DB') as db:
 			rp_msg = None
 			usr_name = None
 			reply_user_id = None
-				
-		if message.new_chat_members: rp(greet)
+		
+		chat.mood = mood_func(chat)
+		
+		if message.new_chat_members: rp(chat.greet)
 
 		elif '//' in msg:
-			if '//count' in msb:		
+			if '//stats' in msb:
+				if		int(chat.cond) == 1:	cc = '✅'
+				elif	int(chat.cond) == 0: 	cc = '❌'
+				if		int(chat.ttsm) == 1: 	ct = '✅'
+				elif	int(chat.ttsm) == 0: 	ct = '❌'
+				if 		int(chat.nsfw) == 1: 	cn = '✅'
+				elif	int(chat.nsfw) == 0: 	cn = '❌'
+				if 		str(chat.lang) == 'ru': cl = '🇷🇺'
+				elif 	str(chat.lang) == 'en':	cl = '🇺🇸'
+
 				rp(service['count']+'\n'+
+				service['cond']+cc+'\n'+
+				service['ttsm']+ct+'\n'+
+				service['nsfw']+cn+'\n'+
+				service['lang']+cl+'\n'+
+				service['mood']+str(chat.mood)+'\n'+
 				service['nyanc']+str(len(nyanc))+'\n'+	
 				service['lewdc']+str(len(lewdc))+'\n'+
 				service['angrc']+str(len(angrc))+'\n'+
 				service['scarc']+str(len(scarc)))
+			
+			elif '//debug' in msg:
+				murk = str(chat.nyanc)+'\n'+str(chat.lewdc)+'\n'+str(chat.angrc)+'\n'+str(chat.scarc)
+				rp(murk)
 			
 			elif '//rand' in msg:
 				rand = random.randint(int(msgs[1]), int(msgs[2]))
@@ -114,13 +132,13 @@ with shelve.open('DB') as db:
 					trans_to = translator.translate(txt, dest=msgrp[1])
 					rp(trans_to.text)
 
-			elif '//tts ' in msg:
+			elif '//tts ' in msg and chat.ttsm == 1:
 				langs = ['en', 'ru', 'fr', 'de', 'jp', 'ch']
 				if str(msgs[1]) in langs:	
 					lang = str(msgs[1])
 					txt = msb.replace('//tts '+str(msgs[1]), '')
 				else: 
-					lang = 'ru'
+					lang = chat.lang
 					txt = msb.replace('//tts ', '')			
 				try:
 					tts = gTTS(text=txt, lang=lang)
@@ -139,7 +157,6 @@ with shelve.open('DB') as db:
 					txt = service['help']
 				rp(txt, disable_web_page_preview=True)	
 				
-		
 			elif '//exch' in msg:
 				exch = Exchange()
 				if 'add' in msgs[1]:	rp(exch.exchange_add(msgs[2], str(mmbr_id)))
@@ -147,7 +164,9 @@ with shelve.open('DB') as db:
 				else:					rp(exch.exchange_run(msgs[2], msgs[3], msgs[1], str(mmbr_id)))
 		
 			elif '..рмх' in msg or '//rmh' in msg or '//rma' in msg:
-				if mmbr_id in katsu_id or mmbr_id in nyanpasu_id:
+				k = str(katsu_id)
+				n = str(nyanpasu_id)
+				if mmbr_id in k or mmbr_id in n:
 					n = int(msg.replace('//rma ','').replace('//rmh ','').replace('..рмх', ''))
 					for message in app.iter_history(chat_id, 100):
 						if message.from_user.id == nyanpasu_id:
@@ -161,41 +180,44 @@ with shelve.open('DB') as db:
 				if (mmbr_id == str(katsu_id) or mmbr_id == str(nyanpasu_id) or
 				user.status is 'administrator' or user.status is 'creator'):
 					if '//greet' in msg:
-						greet_txt = msb.replace('//greet', '')
+						greet_txt = msb.replace(msgs[0]+' ', '')
 						chat.greet = greet_txt
 						rp(service['rp_greet'])
 					elif '//cond' in msg:
-						msgc = msg.replace('//cond ','')
-						if 'on' in msgc:
+						if 'on' == msgs[1]:
 							chat.cond = 1
 							rp(service['rp_on'])
-						if 'off' in msgc:
+						if 'off' == msgs[1]:
 							chat.cond = 0
 							rp(service['rp_off'])
+					elif '//nsfw' in msg:
+						if 'on' in msgs[1]:
+							chat.nsfw = 1
+							rp(service['nsfw_on'])
+						if 'off' in msgs[1]:
+							chat.nsfw = 0
+							rp(service['nsfw_off'])
 					elif '//lang' in msg:
-						lang_txt = msg.replace('//lang ', '')
 						langs = ('ru', 'en')
-						if lang_txt in langs:
-							chat.lang = lang_txt
+						if msgs[1] in langs:
+							chat.lang = msgs[1]
 							rp(service['ch_lang'])
 						else:
 							rp(service['er_lang'])
 					elif '//ttsm' in msg:
-						msgc = msg.replace('//ttsm ','')
-						if 'on' in msgc:
+						if 'on' in msgs[1]:
 							chat.ttsm = 1
 							rp(service['tts_on'])
-						if 'off' in msgc:
+						if 'off' in msgs[1]:
 							chat.ttsm = 0
 							rp(service['tts_off'])
-					elif '//mode' in msg:
-						mode_txt = msg.replace('//mode ', '')
-						modes = ('nyan', 'lewd', 'angr', 'scar')
-						if mode_txt in modes:
-							chat.mode = mode_txt
-							rp(service['ch_mode'])
+					elif '//mood' in msg:
+						moods = ('nyan', 'lewd', 'angr', 'scar')
+						if msgs[1] in moods:
+							chat.mood = msgs[1]
+							rp(service['ch_mood'])
 						else:
-							rp(service['er_mode'])
+							rp(service['er_mood'])
 					elif '//set_zero' in msg:
 						chat.nyanc = []
 						chat.lewdc = []
@@ -207,17 +229,17 @@ with shelve.open('DB') as db:
 				or '//chat_on' in msg 
 				or '//chat_off' in msg 
 				or '//lang' in msg 
-				or '//mode' in msg 
+				or '//mood' in msg 
 				or '//set_zero' in msg):
 					rp(service['perm_er'])
 		
 		elif chat.cond == 1:
 			if (reply_user_id == str(nyanpasu_id) or reply_user_id == None):
-				replaier(reacts, lang, mode, chat, message, msg)
+				replaier(reacts, chat.lang, chat.mood, chat, message, msg)
 
 		elif chat.cond == 0: 
 			if (reply_user_id == str(nyanpasu_id) or nyanpasu_un in msg or '&' in msg):
-				replaier(reacts, lang, mode, chat, message, msg)
+				replaier(reacts, chat.lang, chat.mood, chat, message, msg)
 
 		db[chat_id] = chat
 		db.sync()
