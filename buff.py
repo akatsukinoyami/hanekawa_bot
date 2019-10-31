@@ -1,6 +1,6 @@
 from config import api_id, api_hash, katsu_id, nyanpasu_id, chaos_id, dev_api_pst, usrnm_pst, psswd_pst
 from pyrogram import Client, MessageHandler, Filters
-from paste_bin import PasteBinApi as pastebin
+from funcs.paste_bin import PasteBinApi as pastebin
 from googletrans import Translator
 from time import sleep as sleep
 import youtube_dl
@@ -130,7 +130,6 @@ def buff(Client, message):
 **..рмх n** или **//rmh n** (где n - число) - __удаляет сообщения бота__
 **..рмк n** или **//rmk n** (где n - число) - __удаляет сообщения Кацу__
 **//rma** - __удаляет сообщения Кацу и бота__
-**..ранд n m** или **//rand n m** - __рандом от n до m__
 **..спам n** или **//spam n** - __печатает n сообщений__
 **..паст код** или **//past код** - __отправить код в pastebin__ 
 **..в "яз"** или **//to "lang"** - __перевод сообщения на английский__
