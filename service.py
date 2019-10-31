@@ -5,6 +5,7 @@ ru_service = {
 	'ttsm'			: 'TTS: ',
 	'nsfw'			: 'NSFW: ',
 	'mood'			: 'Настроение: ',
+	'exit'			: 'Бот полностью выключен',
 	'rp_on'			: 'Ответчик для чата включен',
 	'rp_off'		: 'Ответчик для чата выключен',
 	'tts_on'		: 'Текст в речь включен',
@@ -35,7 +36,7 @@ ru_service = {
 //trans "яз" или //tl "яз" 
 """,
 	'help_admin'	: """//lang - изменить язык ответчика (ru, en)
-//mode - изменить режим ответчика (nyan, lewd, brut, scar)
+//mood - изменить режим ответчика (nyan, lewd, brut, scar)
 //greet - указать приветствие новому учаснику
 //cond on/off - вкл/выкл ответчик в чате
 //ttsm on/off - вкл/выкл текст-в-речь
@@ -49,6 +50,7 @@ en_service = {
 	'ttsm'			: 'TTS: ',
 	'nsfw'			: 'NSFW: ',
 	'mood'			: 'Mood: ',
+	'exit'			: 'Bot fully deactivated',
 	'rp_on'			: 'Reply reactions set on',
 	'rp_off'		: 'Reply reactions set off',
 	'nsfw_on'		: 'NSFW-mode set on',
@@ -79,7 +81,7 @@ en_service = {
 //trans "lang" или //tl "lang" 
 """,
 	'help_admin'	: """//lang - set up language (ru, en)
-//lang - change mode of replier (nyan, lewd, brut, scar)
+//mood - change mode of replier (nyan, lewd, brut, scar)
 //greet - set up greeting for new chat member
 //cond on/off - turn on/off replier
 //ttsm on/off - turn on/off text-to-speech

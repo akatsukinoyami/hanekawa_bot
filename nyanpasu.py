@@ -1,53 +1,26 @@
 from config import api_id, api_hash, chaos_id, katsu_id, nyanpasu_id, nyanpasu_un
 from pyrogram import Client, MessageHandler, Filters, ChatMember
 from service import ru_service, en_service
+from chat_db import ChatDB as chat_db
 from googletrans import Translator
 from time import sleep as sleep
 from exchange import Exchange
+from replaier import replaier
 from mood import mood_func
 from words import reacts
 from gtts import gTTS
 import random
 import shelve
 import time
-import re
 
 with shelve.open('DB') as db:
 	app = Client("hebushek", api_id, api_hash)
 	translator = Translator()
-	
-	class chat_db:
-		def __init__(self, cond=0, nsfw=0, lang='ru', mood='nyan', ttsm = 0, greet=None, 
-		nyanc=[], lewdc = [], angrc = [], scarc = []):
-			self.cond	= cond
-			self.nsfw	= nsfw
-			self.lang	= lang
-			self.mood	= mood
-			self.ttsm	= ttsm
-			self.greet	= greet
-			self.nyanc	= nyanc
-			self.lewdc	= lewdc
-			self.angrc	= angrc
-			self.scarc	= scarc
-	
-	def replaier(reacts, lang, mood, chat, message, msg):
-		for triggers, reaction in reacts[lang][mood].items():
-					for trigger in triggers:
-						if re.search(r'\b'+trigger, msg):
-							a = random.choice(reaction)
-							a.reply(message)
-							now = round(time.time())
-							if a.attr == 'nyan':
-								chat.nyanc.append(now)
-							elif a.attr == 'lewd':
-								chat.lewdc.append(now)
-							elif a.attr == 'angr':
-								chat.angrc.append(now)
-							elif a.attr == 'scar':
-								chat.scarc.append(now)
 
 	@app.on_message(~Filters.user(chaos_id) & (Filters.group | Filters.private))
 	def nyanpasu(Client, message):
+		k = str(katsu_id)
+		n = str(nyanpasu_id)
 		chat_id = str(message.chat.id)
 		if chat_id not in db:
 			db[chat_id] = chat_db(cond=0, nsfw=0, lang='ru', mood='nyan', ttsm = 0, greet='Добро Пожаловать', 
@@ -163,21 +136,8 @@ with shelve.open('DB') as db:
 				if 'del' in msgs[1]:	rp(exch.exchange_del(msgs[2], str(mmbr_id)))
 				else:					rp(exch.exchange_run(msgs[2], msgs[3], msgs[1], str(mmbr_id)))
 		
-			elif '..рмх' in msg or '//rmh' in msg or '//rma' in msg:
-				k = str(katsu_id)
-				n = str(nyanpasu_id)
-				if mmbr_id in k or mmbr_id in n:
-					n = int(msg.replace('//rma ','').replace('//rmh ','').replace('..рмх', ''))
-					for message in app.iter_history(chat_id, 100):
-						if message.from_user.id == nyanpasu_id:
-							sleep(.1)
-							a = message.message_id
-							app.delete_messages(chat_id, a)
-							n = n - 1
-							if n == 0: break
-				
 			elif message.chat.type == 'supergroup':
-				if (mmbr_id == str(katsu_id) or mmbr_id == str(nyanpasu_id) or
+				if (mmbr_id == k or mmbr_id == n or
 				user.status is 'administrator' or user.status is 'creator'):
 					if '//greet' in msg:
 						greet_txt = msb.replace(msgs[0]+' ', '')
@@ -233,12 +193,26 @@ with shelve.open('DB') as db:
 				or '//set_zero' in msg):
 					rp(service['perm_er'])
 		
-		elif chat.cond == 1:
-			if (reply_user_id == str(nyanpasu_id) or reply_user_id == None):
+		elif ('//rma ' in msg or '//rmh ' in msg or '..рмх' in msg) and (
+			mmbr_id == k or mmbr_id == n):
+					n = int(msg.replace('//rma ','').replace('//rmh ','').replace('..рмх', ''))
+					for message in app.iter_history(chat_id, 100):
+						if message.from_user.id == nyanpasu_id:
+							sleep(.1)
+							app.delete_messages(chat_id, message.message_id)
+							n = n - 1
+							if n == 0: break
+		elif ('//quit' in msg or '//exit' in msg) and (
+			mmbr_id == k or mmbr_id == n):
+				rp(service['exit'])
+				db[chat_id] = chat
+				db.sync()
+				exit()
+
+		elif chat.cond == 1 and (reply_user_id == n or reply_user_id == None):
 				replaier(reacts, chat.lang, chat.mood, chat, message, msg)
 
-		elif chat.cond == 0: 
-			if (reply_user_id == str(nyanpasu_id) or nyanpasu_un in msg or '&' in msg):
+		elif chat.cond == 0 and (reply_user_id == n or nyanpasu_un in msg or '&' in msg):
 				replaier(reacts, chat.lang, chat.mood, chat, message, msg)
 
 		db[chat_id] = chat
