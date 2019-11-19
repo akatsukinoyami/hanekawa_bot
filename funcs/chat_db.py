@@ -9,7 +9,7 @@ class User:
 
 class ChatDB:
 	def __init__(self, 
-	cond=0, nsfw=0, greetc=0, ttsm = 0,	shipt=0,
+	cond=0, nsfw=0, greetc=1, ttsm = 0,	shipt=0,
 	lang='ru', mood='nyan', users={}, greet='Добро пожаловать', 
 	nyanc=[], lewdc = [], angrc = [], scarc = []):
 		self.cond	= cond

@@ -18,12 +18,11 @@ def functions(app, message, chat, service):
 		txt = chat_stats(chat, service)
 		rp(txt)
 	
-	elif '!stat' in msg:
-		txt = stat(service, message, chat)
-		rp(txt)
-			
-	elif '!mystat' in msg:
-		txt = my_stats(chat, service, mmbr.id)
+	elif '!karma' in msg:
+		if message.reply_to_message:
+			txt = stat(service, message, chat)
+		else:
+			txt = my_stats(chat, service, mmbr.id)
 		rp(txt)
 				
 	elif '!help' in msg:	
@@ -32,6 +31,8 @@ def functions(app, message, chat, service):
 			txt = url_txt+'\n'+service['helpe']
 		elif 'admin' in msg:
 			txt = service['help_admin']
+		elif 'config' in msg:
+			txt = service['help_usr_set']
 		else: 
 			txt = service['help']
 		rp(txt, disable_web_page_preview=True)
@@ -80,5 +81,19 @@ def functions(app, message, chat, service):
 			if 'off' == msgs[2]:
 				chat.users[mmbr.id].ship = 0
 				rp(service['usr_ship_off'])	
-
-					
+				
+	elif '!admins' in msg:
+		admins = ''
+		for member in app.iter_chat_members(message.chat.id, filter='administrators'):
+			mu = member.user
+			if mu.username:		muu = ' - ' + mu.username
+			else:				muu = ' - ' + mu.first_name
+			if member.title:	mt  = ' - ' + member.title
+			else:				mt  = ' '
+			if member.status == 'creator':
+				admins = (str(member.status + muu +  mt + """
+""") + admins)
+			else: 
+				admins += str(member.status + muu +  mt + """
+""")
+		rp(admins)

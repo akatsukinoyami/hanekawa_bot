@@ -9,22 +9,22 @@ def user_make(message, chat, service):
 	msgs = msg.split()
 
 	if mmbr.id not in chat.users:
-		chat.users[mmbr.id] = User(usern=mmbr.username)
+		chat.users[mmbr.id] = User(cond=1, karma=0, ship = 0, usern=mmbr.username)
 	else: 
 		chat.users[mmbr.id].usern = mmbr.username
 
 	if n not in chat.users:
-		chat.users[n] = User(nyanpasu_un)
+		chat.users[n] = User(cond=1, karma=0, ship = 0, usern=nyanpasu_un)
 
 	if message.reply_to_message != None:
 		reply = message.reply_to_message
-		rmbr = str(message.reply_to_message.from_user)
+		rmbr = message.reply_to_message.from_user
 		if rmbr.id not in chat.users:
 			if rmbr.username:
 				reply_usrname = rmbr.username
 			else:
 				reply_usrname = rmbr.first_name
-			chat.users[rmbr.id] = User(usern=reply_usrname)
+			chat.users[rmbr.id] = User(cond=1, karma=0, ship = 0, usern=reply_usrname)
 		else:
 			if chat.users[rmbr.id].usern != rmbr.username:
 				if rmbr.username:

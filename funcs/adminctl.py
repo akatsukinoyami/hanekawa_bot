@@ -60,6 +60,11 @@ def adminctl(app, message, chat, service):
 				rp(service['ch_mood'])
 			else:
 				rp(service['er_mood'])
+		elif '!setkarma' in msg:
+			user = chat.users[message.reply_to_message.from_user.id]
+			n = msgs[1]
+			user.karma = n
+			rp(str(eval(service['karma_ch'])))
 		elif '!set_zero' in msg:
 			chat.nyanc = []
 			chat.lewdc = []
@@ -72,5 +77,6 @@ def adminctl(app, message, chat, service):
 	or '!ttsm' in msg  
 	or '!lang' in msg 
 	or '!mood' in msg 
+	or '!setkarma' in msg 
 	or '!set_zero' in msg):
 		rp(service['perm_er'])

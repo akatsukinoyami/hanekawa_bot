@@ -17,28 +17,29 @@ from funcs.ship 		import ship
 
 with shelve.open('DB') as db:
 	app = Client("hebushek", api_id, api_hash)
+
 	@app.on_message((Filters.group | Filters.private))
 	def nyanpasu(Client, message):
 		k = str(katsu_id)
 		n = str(nyanpasu_id)
 		chat_id = str(message.chat.id)
 		mmbr = message.from_user
-		reply = message.reply_to_message
 		try:
-			reply_msg_id = reply.message_id
-			reply_msg_txt = reply.text
-			reply_user_id = str(reply.from_user.id)
-			reply_user_fname  = str(reply.from_user.first_name)
-			if reply.from_user.username:
+			reply_msg = message.reply_to_message
+			reply_msg_id = reply_msg.message_id
+			reply_msg_txt = reply_msg.text
+			reply_user = message.reply_to_message.from_user
+			reply_user_id = reply_user.id
+			reply_user_fname = reply_user.first_name
+			if message.reply_to_message.from_user.username:
 				reply_usrname = '@' + str(reply.from_user.username)
 			else:
-				reply_usrname = reply_first_name
+				reply_usrname = reply_user.first_name
 		except BaseException:
 			reply_msg_id = None
 			reply_msg_txt = None
 			reply_user_id = None
-			reply_user_fname  = None
-			reply_usrname = None
+			reply_user_fname = None
 
 		if chat_id not in db:
 			db[chat_id] = chat_db()
@@ -52,7 +53,27 @@ with shelve.open('DB') as db:
 		chat.mood = mood_func(chat)
 		user_make(message, chat, service)
 		
-		if message.new_chat_members and chat.greetc == 1: rp(chat.greet)
+		if message.new_chat_members:
+			if str(mmbr.id) ==  n:
+				txt = """Приветствую всех, 
+Чтобы настроить приветственное сообщение
+введите "!greet on" и "!greet текст".
+Чтобы включить ответчик введите "!cond on"."""
+				message.reply(txt)
+			elif chat.greetc == 1: 
+				txt = chat.greet
+				message.reply(txt)
+
+		elif ('!rma ' in msg or '!rmh ' in msg or '!рма ' in msg or '!рмх ' in msg):
+			if (str(mmbr.id) == k or str(mmbr.id) == n):
+				с = int(msgs[1])
+				for message in app.iter_history(chat_id, 100):
+					print(message.from_user.id)
+					if str(message.from_user.id) == n:
+						sleep(.1)
+						app.delete_messages(chat_id, message.message_id)
+						с = с - 1
+						if с == 0: break
 
 		elif '!' in msg:
 			functions(app, message, chat, service)
@@ -66,18 +87,6 @@ with shelve.open('DB') as db:
 		elif chat.cond == 0 or chat.users[mmbr.id].cond == 0:
 			if (reply_user_id == n or nyanpasu_un in msg):
 				replaier(chat, message)
-		
-		elif (
-			'!rma ' in msg	or '!rmh ' in msg	or 
-			'!рма ' in msg	or '!рмх ' in msg)	and (
-			mmbr.id == k	or mmbr.id == n):
-					с = int(msg.replace('!rma ','').replace('!rmh ','').replace('!рмх ', '').replace('!рма ', ''))
-					for message in app.iter_history(chat_id, 100):
-						if message.from_user.id == n:
-							sleep(.1)
-							app.delete_messages(chat_id, message.message_id)
-							с = с - 1
-							if с == 0: break
 		
 		elif reply_user_id:
 			user_rep_change(message, chat, reply_user_id, service, rep_usr_name)

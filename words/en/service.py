@@ -24,8 +24,7 @@ service = {
 	'rep_up'		: ("'Reputation of '+usr_name+' growed'"),
 	'use_stats'		: 'Your stats:',
 	'use_cond'		: 'Replaier: ',
-	'use_sex'		: 'Sex: ',
-	'use_rel'		: 'Shipper: ',
+	'use_ship'		: 'Shipper: ',
 	'user_rp_on'	: 'Individual replier turned on.',
 	'user_rp_off'	: 'Individual replier turned off.',
 	'user_ship_on'	: 'You was added in shipper list.',
@@ -33,6 +32,7 @@ service = {
 	'karma_use'		: 'Karma: ',
 	'karma_for'		: 'Karma of user',
 	'karma_err'		: 'Error. You need reply to message.',
+	'karma_ch'		: ("'Karma of '+user.usern+' changed to '+n"),
 	'perm_er'		: 'You have not permission to do that',
 	'count'			: 'Chat settings: ',
 	'nyanc'			: 'Cuteness: ',
@@ -47,8 +47,11 @@ service = {
 	'help'			: """!help - this help
 !help exch - help for currency exchange
 !help admin - help for admin functions
+!help config - help for user configs
 !stats - Show stats of chat
-!mystat - Show reputation
+!admins - admins of chat
+!karma - Show reputation
+!karma - show karma of user reply to
 !tts "lang" - text-to-speech
 !rand "fm" "to" - random in from to number
 !translate "lang" - translate msg or reply
@@ -57,8 +60,14 @@ service = {
 	'help_admin'	: """!lang - set up language (ru, en)
 !mood - change mode of replier (nyan, lewd, brut, scar)
 !greet - set up greeting for new chat member
+!greet on/off - turn on/off greeting
 !cond on/off - turn on/off replier
+!nsfw on/off - turn on/off lewd 
 !ttsm on/off - turn on/off text-to-speech
-!set_zero - set all modificators to zero
+!setkarma n - set karma of user reply to
+!set_zero - set all mood modificators to zero
 """,
+	'help_usr_set'	: """!config cond on/off - turn on/off replier for yourself
+!config shipper on/off - turn on/off shipper for yourself
+"""
 }
