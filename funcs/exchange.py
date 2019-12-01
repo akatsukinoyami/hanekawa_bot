@@ -9,6 +9,7 @@ class Exchange:
         r = requests.get('https://api.exchangerate-api.com/v4/latest/'+base.upper())
         exch_dict = eval(r.text)
         dest = dest.upper()
+        num = num.replace(',', '.')
 
         if dest in self.currency:
             rate = exch_dict['rates'][dest]

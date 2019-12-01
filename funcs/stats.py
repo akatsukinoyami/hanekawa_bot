@@ -2,16 +2,12 @@ from config import nyanpasu_id
 from funcs.rep import user_make
 
 def chat_stats(chat, service):
-    if      int(chat.cond)      == 1:	cc = '✅'
-    elif	int(chat.cond)      == 0: 	cc = '❌'
-    if		int(chat.ttsm)      == 1: 	ct = '✅'
-    elif	int(chat.ttsm)      == 0: 	ct = '❌'
-    if 		int(chat.nsfw)      == 1: 	cn = '✅'
-    elif	int(chat.nsfw)      == 0: 	cn = '❌'
-    if 		int(chat.greetc)    == 1: 	cg = '✅'
-    elif	int(chat.greetc)    == 0: 	cg = '❌'
-    if 		str(chat.lang)      == 'ru':cl = '🇷🇺'
-    elif 	str(chat.lang)      == 'en':cl = '🇺🇸'
+    cc = '✅' if int(chat.cond)   else '❌'
+    ct = '✅' if	int(chat.ttsm)   else '❌'
+    cn = '✅' if	int(chat.nsfw)   else '❌'
+    cg = '✅' if	int(chat.greetc) else '❌'
+    if 	 str(chat.lang) == 'ru':cl = '🇷🇺'
+    elif str(chat.lang) == 'en':cl = '🇺🇸'
 
     txt = (service['count']+'\n\n'+
     service['cond']+cc+'\n'+
@@ -25,15 +21,11 @@ def chat_stats(chat, service):
     service['angrc']+str(len(chat.angrc))+'\n'+
     service['scarc']+str(len(chat.scarc))+'\n\n'+
     service['rep_nps']+str(chat.users[nyanpasu_id].karma))
-
     return txt
 
 def my_stats(chat, service, mmbr_id):
-    if      int(chat.users[mmbr_id].cond)   ==  1:	uc = '✅'
-    elif	int(chat.users[mmbr_id].cond)   ==  0: 	uc = '❌'
-
-    if      int(chat.users[mmbr_id].ship)   ==  1: us = '✅'
-    elif	int(chat.users[mmbr_id].ship)   ==  0: us = '❌'
+    uc = '✅' if int(chat.users[mmbr_id].cond) else '❌'
+    us = '✅' if int(chat.users[mmbr_id].ship) else '❌'
 
     txt = (service['use_stats']+'\n\n'+
     service['use_cond']+uc+'\n'+

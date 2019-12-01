@@ -1,6 +1,4 @@
-from config import katsu_id
-from config import nyanpasu_id
-
+from config import katsu_id, nyanpasu_id
 def adminctl(app, message, chat, service):
 	k = str(katsu_id)
 	n = str(nyanpasu_id)

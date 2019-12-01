@@ -1,13 +1,15 @@
 from pyrogram import Client, MessageHandler, Filters, ChatMember
 from time import sleep as sleep
+from threading import Thread
 import random
 import shelve
 import time
 
-from config import api_id, api_hash, chaos_id, nyanpasu_un, nyanpasu_id, katsu_id
+from config import api_id, api_hash, nyanpasu_un, nyanpasu_id, katsu_id
 from words.service		import lang_service
 from funcs.rep 			import user_make, user_rep_change
 from funcs.chat_db		import ChatDB as chat_db
+from funcs.delete 		import del_nyanpasu
 from funcs.functions	import functions
 from funcs.mood 		import mood_func
 from funcs.replaier 	import replaier
@@ -24,22 +26,24 @@ with shelve.open('DB') as db:
 		n = str(nyanpasu_id)
 		chat_id = str(message.chat.id)
 		mmbr = message.from_user
-		try:
-			reply_msg = message.reply_to_message
-			reply_msg_id = reply_msg.message_id
-			reply_msg_txt = reply_msg.text
-			reply_user = message.reply_to_message.from_user
-			reply_user_id = reply_user.id
-			reply_user_fname = reply_user.first_name
-			if message.reply_to_message.from_user.username:
-				reply_usrname = '@' + str(reply.from_user.username)
-			else:
-				reply_usrname = reply_user.first_name
-		except BaseException:
-			reply_msg_id = None
-			reply_msg_txt = None
-			reply_user_id = None
-			reply_user_fname = None
+		reply =	message.reply_to_message
+		if reply:
+			reply_user 			=			message.reply_to_message.from_user
+			reply_msg_id		=			reply.message_id
+			reply_msg_txt		=			reply.text
+			reply_user_id		= 			reply_user.id
+			reply_user_fname	=			reply_user.first_name
+			if reply.from_user.username:	reply_usrname = ('@' + str(reply_user.username))
+			else:							reply_usrname = reply_user.first_name
+			msg_id				=			int(reply_msg_id)
+		else:
+			reply_user 			=			None
+			reply_msg_id		=			None
+			reply_msg_txt		=			None
+			reply_user_id		= 			None
+			reply_user_fname	=			None
+			reply_usrname		=			None
+			msg_id				=			int(message.message_id)
 
 		if chat_id not in db:
 			db[chat_id] = chat_db()
@@ -52,7 +56,12 @@ with shelve.open('DB') as db:
 		service = lang_service(chat)
 		chat.mood = mood_func(chat)
 		user_make(message, chat, service)
-		
+		nyanpasu_stat = app.get_chat_member(chat_id, nyanpasu_id).status
+
+#		if (nyanpasu_stat is 'administrator' or nyanpasu_stat is 'creator' 
+#		and user.status is 'administrator' or user.status is 'creator'
+#		or mmbr.id == k or mmbr.id == n):
+				
 		if message.new_chat_members:
 			if str(mmbr.id) ==  n:
 				txt = """Приветствую всех, 
@@ -65,28 +74,24 @@ with shelve.open('DB') as db:
 				message.reply(txt)
 
 		elif ('!rma ' in msg or '!rmh ' in msg or '!рма ' in msg or '!рмх ' in msg):
-			if (str(mmbr.id) == k or str(mmbr.id) == n):
-				с = int(msgs[1])
-				for message in app.iter_history(chat_id, 100):
-					print(message.from_user.id)
-					if str(message.from_user.id) == n:
-						sleep(.1)
-						app.delete_messages(chat_id, message.message_id)
-						с = с - 1
-						if с == 0: break
+			del_nyanpasu(app, chat_id, mmbr, msgs)
 
 		elif '!' in msg:
 			functions(app, message, chat, service)
-			if message.chat.type == 'supergroup':
-				adminctl(app, message, chat, service)
+			adminctl(app, message, chat, service)
+			if 'debug' in msg:
+				print(message)
 
 		elif chat.cond == 1 and chat.users[mmbr.id].cond == 1:
-			if (reply_user_id == n or reply_user_id == None):
-				replaier(chat, message)
+			if (reply_user_id == n or reply == None):
+				replaier(chat, app, chat_id, msb, msg_id)
 
 		elif chat.cond == 0 or chat.users[mmbr.id].cond == 0:
 			if (reply_user_id == n or nyanpasu_un in msg):
-				replaier(chat, message)
+				replaier(chat, app, chat_id, msb, msg_id)
+		
+#		elif message.chat.type == 'private':
+#				replaier(chat, message)
 		
 		elif reply_user_id:
 			user_rep_change(message, chat, reply_user_id, service, rep_usr_name)

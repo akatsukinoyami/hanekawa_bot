@@ -3,6 +3,7 @@ from funcs.exchange import Exchange
 from funcs.tts import tts
 from googletrans import Translator
 import random
+import re
 
 translator = Translator()
 
@@ -13,6 +14,8 @@ def functions(app, message, chat, service):
 	msg = msb.lower()
 	msgs = msg.split()
 	rp = message.reply
+	chat_id = message.chat.id
+	msg_id = int(message.reply_to_message.message_id) if message.reply_to_message else int(message.message_id)
 
 	if '!stats' in msg:		
 		txt = chat_stats(chat, service)
@@ -49,8 +52,8 @@ def functions(app, message, chat, service):
 		langs = ['en', 'ru', 'fr', 'de', 'jp', 'ch']
 		msgrp = msb.split()
 		if msgrp[1] in langs:
-			if reply_msg:
-				text = (rep_usr_name+'__\n\n'+reply_msg)
+			if message.reply_to_message:
+				text = (rep_usr_name+'__\n\n'+message.reply_to_message.text)
 			else:
 				text = msb.replace('!translate '+msgrp[1]+' ', '').replace('!trans '+msgrp[1]+' ', '').replace('!tl '+msgrp[1]+' ', '')
 			txt = (translator.translate(text, dest=msgrp[1])).text
@@ -65,6 +68,20 @@ def functions(app, message, chat, service):
 		if 'del' in msgs[1]:	txt = exch.exchange_del(msgs[2], str(mmbr.id))
 		else:					txt = exch.exchange_run(msgs[2], msgs[3], msgs[1], str(mmbr.id))
 		rp(txt)
+
+	elif '!calc' in msg:
+		h = ('+', '-', '*', '/')
+		for i in h:
+			if i in msg:
+				q = msg.replace(i, ' ')
+				w = q.split()
+				ops = {
+					'+' : lambda a, b: a+b,	
+					'-' : lambda a, b: a-b,
+					'*' : lambda a, b: a*b, 	
+					'/' : lambda a, b: a/b}
+				c = str(round(ops[i](int(w[1]), int(w[2])), 3))
+				rp(w[1] + i + w[2] + ' = ' + c)			
 	
 	elif '!config' in msg:
 		if 'cond' in msgs[1]:
@@ -80,7 +97,22 @@ def functions(app, message, chat, service):
 				rp(service['user_ship_on'])
 			if 'off' == msgs[2]:
 				chat.users[mmbr.id].ship = 0
-				rp(service['usr_ship_off'])	
+				rp(service['usr_ship_off'])
+	elif '!id' in msg:
+		try:
+			if 'stick' in msg:
+				txt = ('Sticker set: '+message.reply_to_message.sticker.set_name 
+				+' '+ message.reply_to_message.sticker.emoji+'\n'+
+				'Stiker ID: '+message.reply_to_message.sticker.file_id)
+			if 'msg' in msg:
+				txt = ('Chat ID: '+str(chat_id)+
+				'\nUser ID: '+str(message.reply_to_message.from_user.id)+
+				'\nMessage ID: '+str(message.reply_to_message.message_id))
+			if 'voice' in msg:
+				txt = ('Voice ID: '+message.reply_to_message.voice.file_id)
+		except AttributeError:	txt = 'Ошибка нахождения ID'
+		app.send_message(chat_id, txt, 
+		reply_to_message_id=msg_id, disable_notification=True)	
 				
 	elif '!admins' in msg:
 		admins = ''

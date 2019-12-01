@@ -5,16 +5,15 @@ import re
 
 now = round(time.time())
 
-def replaier(chat, message):
+def replaier(chat, app, chat_id, msb, msg_id):
 	lang = chat.lang
 	mood = chat.mood
-	msb = str(message.text)
 	msg = msb.lower()
 	for triggers, reaction in reacts[lang][mood].items():
 				for trigger in triggers:
 					if re.search(r'\b'+trigger, msg):
 						a = random.choice(reaction)
-						a.reply(message)
+						a.reply(app, chat_id, msg_id)
 						if a.attr == 'nyan':
 							chat.nyanc.append(now)
 						elif a.attr == 'lewd':

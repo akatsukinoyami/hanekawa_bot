@@ -1,6 +1,7 @@
 from words.classes import T, S, V
-from words.config import nyanpasu_name as name
+from words.config import nyanpasu_name
 
+name = nyanpasu_name
 angr = {
 ('акацуки',) : (
 	T("Кто взывает к Рассвету Тьмы?"),),
