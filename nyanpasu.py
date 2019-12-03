@@ -8,6 +8,7 @@ import time
 from config import api_id, api_hash, nyanpasu_un, nyanpasu_id, katsu_id
 from words.service		import lang_service
 from funcs.rep 			import user_make, user_rep_change
+from funcs.speechrec	import speech_recognition
 from funcs.chat_db		import ChatDB as chat_db
 from funcs.delete 		import del_nyanpasu
 from funcs.functions	import functions
@@ -16,6 +17,7 @@ from funcs.replaier 	import replaier
 from funcs.adminctl 	import adminctl
 from funcs.chat_db 		import User
 from funcs.ship 		import ship
+
 
 with shelve.open('DB') as db:
 	app = Client("hebushek", api_id, api_hash)
@@ -28,22 +30,21 @@ with shelve.open('DB') as db:
 		mmbr = message.from_user
 		reply =	message.reply_to_message
 		if reply:
-			reply_user 			=			message.reply_to_message.from_user
-			reply_msg_id		=			reply.message_id
-			reply_msg_txt		=			reply.text
-			reply_user_id		= 			reply_user.id
-			reply_user_fname	=			reply_user.first_name
-			if reply.from_user.username:	reply_usrname = ('@' + str(reply_user.username))
-			else:							reply_usrname = reply_user.first_name
-			msg_id				=			int(reply_msg_id)
+			reply_user 			=	message.reply_to_message.from_user
+			reply_msg_id		=	reply.message_id
+			reply_msg_txt		=	reply.text
+			reply_user_id		= 	reply_user.id
+			reply_user_fname	=	reply_user.first_name
+			reply_usrname 		= 	('@' + str(reply_user.username)) if reply_user.username else reply_user.first_name
+			msg_id				=	int(reply_msg_id)
 		else:
-			reply_user 			=			None
-			reply_msg_id		=			None
-			reply_msg_txt		=			None
-			reply_user_id		= 			None
-			reply_user_fname	=			None
-			reply_usrname		=			None
-			msg_id				=			int(message.message_id)
+			reply_user 			=	None
+			reply_msg_id		=	None
+			reply_msg_txt		=	None
+			reply_user_id		= 	None
+			reply_user_fname	=	None
+			reply_usrname		=	None
+			msg_id				=	int(message.message_id)
 
 		if chat_id not in db:
 			db[chat_id] = chat_db()
@@ -81,6 +82,7 @@ with shelve.open('DB') as db:
 			adminctl(app, message, chat, service)
 			if 'debug' in msg:
 				print(message)
+				print(message.reply_to_message.voice.file_id)
 
 		elif chat.cond == 1 and chat.users[mmbr.id].cond == 1:
 			if (reply_user_id == n or reply == None):
@@ -95,6 +97,12 @@ with shelve.open('DB') as db:
 		
 		elif reply_user_id:
 			user_rep_change(message, chat, reply_user_id, service, rep_usr_name)
+		
+		if message.voice:
+			speech_recognition(app, message, chat.lang)
+
+		if str(message.from_user.id) == str(399026864):
+				message.reply('Пошел нахуй')
 
 		db[chat_id] = chat
 		db.sync()

@@ -1,7 +1,8 @@
 from funcs.stats import my_stats, chat_stats, stat
+from funcs.RPN import rpn_calc as calc
 from funcs.exchange import Exchange
-from funcs.tts import tts
 from googletrans import Translator
+from funcs.tts import tts
 import random
 import re
 
@@ -70,18 +71,7 @@ def functions(app, message, chat, service):
 		rp(txt)
 
 	elif '!calc' in msg:
-		h = ('+', '-', '*', '/')
-		for i in h:
-			if i in msg:
-				q = msg.replace(i, ' ')
-				w = q.split()
-				ops = {
-					'+' : lambda a, b: a+b,	
-					'-' : lambda a, b: a-b,
-					'*' : lambda a, b: a*b, 	
-					'/' : lambda a, b: a/b}
-				c = str(round(ops[i](int(w[1]), int(w[2])), 3))
-				rp(w[1] + i + w[2] + ' = ' + c)			
+		rp(msg.replace('!calc ', '') + ' = ' + calc(msg.replace('!calc ', '')))
 	
 	elif '!config' in msg:
 		if 'cond' in msgs[1]:

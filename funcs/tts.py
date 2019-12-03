@@ -6,10 +6,10 @@ def tts(message, chat, app):
 	msg = msb.lower()
 	msgs = msg.split()		
 
-	langs = ['en', 'ru', 'fr', 'de', 'jp', 'ch']
+	langs = ['en', 'ru', 'fr', 'de', 'jp', 'ko', 'ua', 'cn']
 	
 	if str(msgs[1]) in langs:
-		lang = str(msgs[1])
+		lang = str(msgs[1]).replace('jp', 'ja').replace('fr', 'fr-fr').replace('ua', 'uk').replace('cn', 'zh-cn')
 		txt = msb.replace('!tts '+str(msgs[1]), '')
 	else: 
 		lang = chat.lang
@@ -19,5 +19,5 @@ def tts(message, chat, app):
 		tts.save('nya.mp3')
 		app.send_voice(message.chat.id, 'nya.mp3', reply_to_message_id=message.message_id)
 	except ValueError:
-		txt = 'Ошибка распознавания текста.'
+		txt = 'Ошибка, язык не поддерживается.'
 		message.reply(txt)

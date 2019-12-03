@@ -37,7 +37,7 @@ def buff(Client, message):
 		rp_msg = None
 		usr_name = None
 		reply_user_id = None
-		
+	
 	if '!' in msg:
 		if '!id' in msg:
 			try:
@@ -85,7 +85,7 @@ def buff(Client, message):
 			rand = random.randint(int(msgs[1]), int(msgs[2]))
 			edit(chat_id, msg_id, "Рандомизирую между "+str(msgs[1])+" и "+str(msgs[2]))
 			sleep(3)
-			edit(chat_id, msg_id, 'Результат рандома: '+str(rand))
+			edit(chat_id, msg_id, 'Результат рандома между '+msgs[1]+' и '+msgs[2]+': '+str(rand))
 
 		elif '!спам' in msg or '!spam' in msg:
 			app.delete_messages(chat_id,msg_id)
