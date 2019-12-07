@@ -1,8 +1,8 @@
 from funcs.stats import my_stats, chat_stats, stat
-from funcs.RPN import rpn_calc as calc
-from funcs.exchange import Exchange
+from funcs.exchange import Exchangec
 from googletrans import Translator
 from funcs.tts import tts
+from subprocess import check_output
 import random
 import re
 
@@ -71,8 +71,12 @@ def functions(app, message, chat, service):
 		rp(txt)
 
 	elif '!calc' in msg:
-		rp(msg.replace('!calc ', '') + ' = ' + calc(msg.replace('!calc ', '')))
-	
+		file = "/home/katsu/Documents/katsu_bots/funcs/RPN"
+		expression = bytes(msg.replace('!calc ', ''), 'UTF-8')
+		t = check_output(file, input=expression)
+		txt = msg.replace('!calc ', '') + ' = ' + str(t).replace("b'",'').replace("\\n'", ' ')
+		rp(txt + ' local')
+
 	elif '!config' in msg:
 		if 'cond' in msgs[1]:
 			if 'on' == msgs[2]:

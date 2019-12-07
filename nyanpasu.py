@@ -1,3 +1,4 @@
+#!/usr/bin/pypy3 -u
 from pyrogram import Client, MessageHandler, Filters, ChatMember
 from time import sleep as sleep
 from threading import Thread

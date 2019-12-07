@@ -1,4 +1,5 @@
-from gtts import gTTS
+from gtts	import gTTS
+from os		import remove
 
 def tts(message, chat, app):
 
@@ -16,8 +17,10 @@ def tts(message, chat, app):
 		txt = msb.replace('!tts ', '')			
 	try:
 		tts = gTTS(text=txt, lang=lang)
-		tts.save('nya.mp3')
-		app.send_voice(message.chat.id, 'nya.mp3', reply_to_message_id=message.message_id)
+		name = 'nya.mp3'
+		tts.save(name)
+		app.send_voice(message.chat.id, name, reply_to_message_id=message.message_id)
+		remove(name)
 	except ValueError:
 		txt = 'Ошибка, язык не поддерживается.'
 		message.reply(txt)

@@ -26,7 +26,12 @@ def rpn_calc(msg, counter=False):
 			counter = False
 
 			if i in o_high:
-				list_oper.append(i)
+    			if list_oper:
+	    			if list_oper[-1] in o_high:
+    					calc(list_expr, list_oper)
+						list_oper.append(i)
+				else:
+    				list_oper.append(i)
 			elif i in o_low:
 				if list_oper:
 					if list_oper[-1] in other:
