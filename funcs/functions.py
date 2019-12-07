@@ -75,7 +75,7 @@ def functions(app, message, chat, service):
 		expression = bytes(msg.replace('!calc ', ''), 'UTF-8')
 		t = check_output(file, input=expression)
 		txt = msg.replace('!calc ', '') + ' = ' + str(t).replace("b'",'').replace("\\n'", ' ')
-		rp(txt + ' local')
+		rp(txt)
 
 	elif '!config' in msg:
 		if 'cond' in msgs[1]:
