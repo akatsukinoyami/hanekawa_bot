@@ -14,11 +14,12 @@ def user_make(message, chat, service):
 		chat.users[mmbr.id].usern = mmbr.username
 
 	if n not in chat.users:
-		chat.users[n] = User(cond=1, karma=0, ship = 0, usern=nyanpasu_un)
+		chat.users[n] = User(cond=1, karma=0, ship =0, usern=nyanpasu_un)
 
 	if message.reply_to_message != None:
 		reply = message.reply_to_message
 		rmbr = message.reply_to_message.from_user
+		
 		if rmbr.id not in chat.users:
 			if rmbr.username:
 				reply_usrname = rmbr.username

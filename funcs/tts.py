@@ -1,11 +1,11 @@
 from gtts	import gTTS
 from os		import remove
 
-def tts(message, chat, app):
+def tts(chat, app, msb, mid):
 
-	msb = str(message.text)
 	msg = msb.lower()
-	msgs = msg.split()		
+	msgs = msg.split()
+	act = app.send_chat_action
 
 	langs = ['en', 'ru', 'fr', 'de', 'jp', 'ko', 'ua', 'cn']
 	
@@ -16,11 +16,15 @@ def tts(message, chat, app):
 		lang = chat.lang
 		txt = msb.replace('!tts ', '')			
 	try:
+		act(chat_id, "record_audio")
 		tts = gTTS(text=txt, lang=lang)
 		name = 'nya.mp3'
 		tts.save(name)
-		app.send_voice(message.chat.id, name, reply_to_message_id=message.message_id)
+		app.send_voice(message.chat.id, name, reply_to_message_id=mid)
 		remove(name)
+		act(chat_id, "cancel")
 	except ValueError:
+		act(chat_id, "typnig")
 		txt = 'Ошибка, язык не поддерживается.'
+		act(chat_id, "cancel")
 		message.reply(txt)

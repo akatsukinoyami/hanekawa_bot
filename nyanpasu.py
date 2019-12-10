@@ -79,11 +79,10 @@ with shelve.open('DB') as db:
 			del_nyanpasu(app, chat_id, mmbr, msgs)
 
 		elif '!' in msg:
-			functions(app, message, chat, service)
 			adminctl(app, message, chat, service)
+			functions(app, message, chat, service)
 			if 'debug' in msg:
 				print(message)
-				print(message.reply_to_message.voice.file_id)
 
 		elif chat.cond == 1 and chat.users[mmbr.id].cond == 1:
 			if (reply_user_id == n or reply == None):
@@ -104,6 +103,17 @@ with shelve.open('DB') as db:
 
 		if str(message.from_user.id) == str(399026864):
 				message.reply('Пошел нахуй')
+
+#		if mmbr.id == n:
+#    		file = 'youtube_db'
+#    		if message.audio:
+#				with shelve.open(file) as db:
+#					db['audio'][f_id]['file_id']= message.audio.file_id
+#					db['audio'][f_id]['title']	= message.audio.caption
+#    		elif message.video:
+#				with shelve.open(file) as db:
+#					db['video'][f_id]['file_id']= message.video.file_id
+#					db['video'][f_id]['title']	= message.video.caption
 
 		db[chat_id] = chat
 		db.sync()

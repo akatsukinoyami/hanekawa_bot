@@ -27,6 +27,8 @@ service = {
 	'use_ship'		: 'Shipper: ',
 	'user_rp_on'	: 'Individual replier turned on.',
 	'user_rp_off'	: 'Individual replier turned off.',
+	'user_ad_on'	: ("'Replaier for user @'+usr_name+' turned on.'"),
+	'user_ad_off'	: ("'Replaier for user @'+usr_name+' turned off.'"),
 	'user_ship_on'	: 'You was added in shipper list.',
 	'user_ship_off'	: 'You was deleted from shipper list.',
 	'karma_use'		: 'Karma: ',
@@ -40,14 +42,17 @@ service = {
 	'angrc'			: 'Anger: ',
 	'scarc'			: 'Scarness: ',
 	'zero'			: 'Modificators set to zero',
-	'helpe'			: """!exch "№" "from" "to"(or auto)
-	!exch add "currency" - add currency in auto
-	!exch del "currency" - delete currency from auto
-	""",
-	'help'			: """!help - this help
+	'vid_unav'		: 'Error. Video unavaliable.',
+	'helpe'			: """Help 
+!exch "№" "from" "to"(or auto)
+!exch add "currency" - add currency in auto
+!exch del "currency" - delete currency from auto
+""",
+	'help'			: """Help 
+!help - this help
 !help exch - help for currency exchange
 !help admin - help for admin functions
-!help config - help for user configs
+!help user - help for user configs
 !stats - Show stats of chat
 !admins - admins of chat
 !karma - Show reputation
@@ -57,17 +62,25 @@ service = {
 !translate "lang" - translate msg or reply
 !trans "lang" или !tl "lang" 
 """,
-	'help_admin'	: """!lang - set up language (ru, en)
-!mood - change mode of replier (nyan, lewd, brut, scar)
-!greet - set up greeting for new chat member
-!greet on/off - turn on/off greeting
-!cond on/off - turn on/off replier
-!nsfw on/off - turn on/off lewd 
-!ttsm on/off - turn on/off text-to-speech
+	'help_admin'	: """Help 
+!config lang - set up language (ru, en)
+!config mood - change mode of replier (nyan, lewd, brut, scar)
+!config greet - set up greeting for new chat member
+!config greet on/off - turn on/off greeting
+!config cond on/off - turn on/off replier
+!config nsfw on/off - turn on/off lewd 
+!config ttsm on/off - turn on/off text-to-speech
+!config set_zero - set all mood modificators to zero
 !setkarma n - set karma of user reply to
-!set_zero - set all mood modificators to zero
 """,
-	'help_usr_set'	: """!config cond on/off - turn on/off replier for yourself
-!config shipper on/off - turn on/off shipper for yourself
-"""
+	'help_usr_set'	: """Help 
+!user cond on/off - turn on/off replier for yourself
+!user shipper on/off - turn on/off shipper for yourself""",
+	'help_youtube'	: """Help
+!ut vid (link) - download to telegram (480р)
+!ut vid (res) (link) - download in given resolution
+!ut aud (link) - download audio
+!ut link (link) - direct link on video 480р)
+!ut link (res) (link) - direct link in given resolution
+For (res) - 144, 240, 360, 480, 720, 1080, 1440, 2160""",
 }
