@@ -1,12 +1,13 @@
 #include <iostream>
 #include <string>
 #include <stack>
+#include <math.h>
 
-void calc(std::stack <int> &arr_nums, 
+void calc(std::stack <float> &arr_nums, 
           std::stack <char> &arr_ops){
-    int b = arr_nums.top();    
+    float b = arr_nums.top();    
     arr_nums.pop();
-    int a = arr_nums.top();    
+    float a = arr_nums.top();    
     arr_nums.pop();
     char nya = arr_ops.top();
     switch(nya){
@@ -18,7 +19,7 @@ void calc(std::stack <int> &arr_nums,
     arr_ops.pop();
 }
 
-void high(std::stack <int> &arr_nums, 
+void high(std::stack <float> &arr_nums, 
           std::stack <char> &arr_ops, 
           bool &counter, char symb){
     counter = false;
@@ -37,7 +38,7 @@ void high(std::stack <int> &arr_nums,
     }
 }
 
-void low(std::stack <int> &arr_nums, 
+void low(std::stack <float> &arr_nums, 
           std::stack <char> &arr_ops, 
           bool &counter, char symb){
     counter = false;
@@ -53,12 +54,12 @@ void low(std::stack <int> &arr_nums,
         arr_ops.push(symb);
     }
 }
-void nums(std::stack <int> &arr_nums, 
+void nums(std::stack <float> &arr_nums, 
           std::stack <char> &arr_ops, 
           bool &counter, char symb){
-    int v = (int)symb - 48;
+    float v = (float)symb - 48;
     if (counter == true){
-        int x = arr_nums.top();
+        float x = arr_nums.top();
         arr_nums.pop();
         arr_nums.push(x * 10 + v);
     }else{
@@ -71,7 +72,7 @@ int main(){
     int n = msg.length();
     bool counter;
     std::stack<char> arr_ops;
-    std::stack<int> arr_nums;
+    std::stack<float> arr_nums;
     std::string a = {'+','-','*','/','(', ')'};
 
     for (int i=0; i < n; i++){
@@ -96,5 +97,6 @@ int main(){
         }
     }
     while (arr_nums.size() > 1){calc(arr_nums, arr_ops);}
-std::cout << arr_nums.top() << '\n';
+float res = arr_nums.top();
+std::cout << floor(res*100)/100 << '\n';
 }

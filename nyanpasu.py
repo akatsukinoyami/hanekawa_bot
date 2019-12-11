@@ -99,7 +99,7 @@ with shelve.open('DB') as db:
 			user_rep_change(message, chat, reply_user_id, service, rep_usr_name)
 		
 		if message.voice:
-			speech_recognition(app, message, chat.lang)
+			speech_recognition(app, chat_id, message, chat.lang)
 
 		if str(message.from_user.id) == str(399026864):
 				message.reply('Пошел нахуй')

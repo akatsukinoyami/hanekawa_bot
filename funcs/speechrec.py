@@ -3,7 +3,8 @@ from config import wit_en_token, wit_ru_token
 from wit	import Wit
 from os	 import remove
 
-def speech_recognition(app, message, lang):
+def speech_recognition(app, chat_id, message, lang):
+	app.send_chat_action(chat_id, "typing")
 	if   str(lang) == 'ru': 
 		wit_cli = Wit(wit_ru_token)
 	elif str(lang) == 'en': 
@@ -30,5 +31,6 @@ def speech_recognition(app, message, lang):
 	usrname = ('@' + str(mf.username)) if mf.username else mf.first_name
 	txt = usrname + ' \n' + resp['_text']
 	remove(name_o)
-
+	
+	app.send_chat_action(chat_id, "cancel")
 	message.reply(txt)
