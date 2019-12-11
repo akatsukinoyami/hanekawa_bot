@@ -15,6 +15,8 @@ service = {
 	'nsfw_off'		: 'NSFW-mode set off',
 	'tts_on'		: 'Text-to-speech set on',
 	'tts_off'		: 'Text-to-speech set off',
+	'punt_lang'		: 'Language don\'t support',
+	'punto'			: ' mistaken and wrote:\n',
 	'ch_lang'		: 'Changed language successfully',
 	'er_leng'		: 'Inputed language is wrong',
 	'ch_mood'		: 'Changed mode successfully',
