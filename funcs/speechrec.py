@@ -1,17 +1,18 @@
-from pydub  import AudioSegment
-from config import wit_en_token, wit_ru_token
-from wit	import Wit
-from os	 import remove
+from pydub   import AudioSegment
+from config  import wit_en_token, wit_ru_token
+from wit	 import Wit
+from os	     import remove
 
-def speech_recognition(app, chat_id, message, lang):
+def speech_recognition(app, service, chat_id, message, lang):
 	app.send_chat_action(chat_id, "typing")
+	msg = app.send_message(chat_id, service['sprec_start'])
 	if   str(lang) == 'ru': 
 		wit_cli = Wit(wit_ru_token)
 	elif str(lang) == 'en': 
 		wit_cli = Wit(wit_en_token)
 
 	m		= message
-	mf	  = message.from_user
+	mf	    = message.from_user
 	voice   = m.voice
 	folder  = '/home/katsu/Documents/katsu_bots/audio/'
 	name	= str(str(m.chat.id) +'_'+ str(m.message_id))
@@ -33,4 +34,4 @@ def speech_recognition(app, chat_id, message, lang):
 	remove(name_o)
 	
 	app.send_chat_action(chat_id, "cancel")
-	message.reply(txt)
+	app.edit_message_text(chat_id, msg.message_id, txt)

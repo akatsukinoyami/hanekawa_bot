@@ -21,7 +21,7 @@ service = {
 	'er_leng'		: 'Inputed language is wrong',
 	'ch_mood'		: 'Changed mode successfully',
 	'er_mood'		: 'Inputed mode is wrong',
-	'rep_nps'		: 'Reputation of Хдебушек: ',
+	'rep_nps'		: 'Reputation of Hanekawa: ',
 	'rep_er'		: 'Baka, you cheater!',
 	'rep_up'		: ("'Reputation of '+usr_name+' growed'"),
 	'use_stats'		: 'Your stats:',
@@ -45,6 +45,15 @@ service = {
 	'scarc'			: 'Scarness: ',
 	'zero'			: 'Modificators set to zero',
 	'vid_unav'		: 'Error. Video unavaliable.',
+	'rand_start'	: 'Turning on random generator.',
+	'rand_next'		: 'Your random number almost ready.',
+	'rand_result'	: 'Random result between ',
+	'&'				: ' and ',
+	'rand_error'	: 'Incorrect values. \n Try this: \n !rand 5 10',
+	'trans_start'	: 'One second, translating',
+	'trans_next'	: ' asked me to translate: \n',
+	'sprec_start'	: 'The voice message is taken for processing.',
+	'id_error'		: 'Error finding ID',
 	'helpe'			: """Help 
 !exch "№" "from" "to"(or auto)
 !exch add "currency" - add currency in auto
@@ -52,9 +61,10 @@ service = {
 """,
 	'help'			: """Help 
 !help - this help
-!help exch - help for currency exchange
-!help admin - help for admin functions
-!help user - help for user configs
+!exch help - help for currency exchange
+!config help - help for admin functions
+!user help - help for user configs
+!ut help - help fo youtube-dl module
 !stats - Show stats of chat
 !admins - admins of chat
 !karma - Show reputation

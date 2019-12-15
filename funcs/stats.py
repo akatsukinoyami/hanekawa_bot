@@ -1,7 +1,7 @@
 from config import nyanpasu_id
 from funcs.rep import user_make
 
-def chat_stats(chat, service):
+def chat_stats(app, chat_id, chat, service, sleep, msg_id, nyanpasu_stats):
     cc = '✅' if int(chat.cond)   else '❌'
     ct = '✅' if	int(chat.ttsm)   else '❌'
     cn = '✅' if	int(chat.nsfw)   else '❌'
@@ -21,7 +21,10 @@ def chat_stats(chat, service):
     service['angrc']+str(len(chat.angrc))+'\n'+
     service['scarc']+str(len(chat.scarc))+'\n\n'+
     service['rep_nps']+str(chat.users[nyanpasu_id].karma))
-    return txt
+    if nyanpasu_stat == 'administrator': app.delete_messages(chat_id, msg_id)
+    msg = app.send_message(chat_id, txt)
+    sleep(10)
+    app.delete_messages(chat_id, msg.message_id)
 
 def my_stats(chat, service, mmbr_id):
     uc = '✅' if int(chat.users[mmbr_id].cond) else '❌'
