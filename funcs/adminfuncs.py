@@ -36,6 +36,8 @@ def adminfuncs(app, chat_id, user_id, nyanpasu_id, katsu_id, mmbr_id, msgs, mess
             except Exception as e:
                 if 'USER_ADMIN_INVALID' in str(e):
                     txt = 'Невозможно забанить администратора.'
+                else: 
+                    txt = str(e)
         else: txt = service['nyan_admin_err']
     else: txt = service['perm_err']
     app.send_message(chat_id, txt, reply_to_message_id=message.message_id)

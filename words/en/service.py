@@ -21,6 +21,7 @@ service = {
 	'er_leng'		: 'Inputed language is wrong',
 	'ch_mood'		: 'Changed mode successfully',
 	'er_mood'		: 'Inputed mode is wrong',
+	'feedback'		: 'Your feedback was sent.',
 	'rep_nps'		: 'Reputation of Hanekawa: ',
 	'rep_er'		: 'Baka, you cheater!',
 	'rep_up'		: ("'Reputation of '+usr_name+' growed'"),
@@ -72,8 +73,7 @@ service = {
 !karma - Show reputation
 !karma - show karma of user reply to
 !tts "lang" - text-to-speech
-!translate "lang" - translate msg or reply
-!trans "lang" или !tl "lang" 
+!feedback - send feedback to creator 
 """,
 	'help_admin'	: """!config lang - set up language (ru, en)
 !config mood - change mode of replier (nyan, lewd, brut, scar)
@@ -93,6 +93,8 @@ service = {
 !ut link (link) - direct link on video 480р)
 !ut link (res) (link) - direct link in given resolution
 For (res) - 144, 240, 360, 480, 720, 1080, 1440, 2160""",
+	'help_trans'	: """!translate "lang" - translate msg or reply
+!trans "lang" or !tl "lang" """,
 	'help_rand'		: """!rand choice (words) - select 1 word from sequence
 !rand "fm" "to" - random in from to number""",
 }

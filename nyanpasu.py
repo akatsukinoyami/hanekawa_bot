@@ -6,7 +6,7 @@ import random
 import shelve
 import time
 
-from config             import api_id, api_hash, nyanpasu_un, nyanpasu_id, katsu_id
+from config             import api_id, api_hash, nyanpasu_un, nyanpasu_id, katsu_id, feedback_id
 from words.service      import lang_service
 from funcs.rep          import user_make, user_rep_change
 from funcs.speechrec    import speech_recognition
@@ -31,6 +31,7 @@ with shelve.open('DB') as db:
         n = str(nyanpasu_id)
         chat_id = str(message.chat.id)
         mmbr =  message.from_user
+        usrname  = ('@' + str(message.from_user.username)) if message.from_user.username else message.from_user.first_name
         reply = message.reply_to_message
         if reply:
             reply_user     =    message.reply_to_message.from_user
@@ -55,11 +56,12 @@ with shelve.open('DB') as db:
         chat.mood = mood_func(chat)
         user_make(message, chat, service)
         
-        usrname  = ('@' + str(message.from_user.username)) if message.from_user.username else message.from_user.first_name
+        
 
         if message.voice:
-            print('voice at '+str(chat_id)+' - '+str(message.message_id))
             speech_recognition(app, service, chat_id, message, chat.lang)
+
+            print('voice at '+str(chat_id)+' - '+str(message.message_id))
 
         elif message.new_chat_members:
             if str(mmbr.id) ==  n:
@@ -77,10 +79,17 @@ with shelve.open('DB') as db:
             if '!config' in msgs[0]:
                 adminctl(app, message, chat, service)
             elif ('!rm' in msgs[0] and mmbr.id == katsu_id or mmbr.id == nyanpasu_id):
-                del_nyanpasu(app, chat_id, msgs, msg_id, n, k, nyanpasu_stat)
+                nyanpasu = app.get_chat_member(chat_id, nyanpasu_id)
+                del_nyanpasu(app, chat_id, msgs, msg_id, n, k, nyanpasu.status)
                 print('deleted msgs at '+str(chat_id)+' - '+str(message.message_id))
-            elif msgs[0] is '!debug':    
+            elif msgs[0] in '!debug':    
                 print(message)
+            elif '!feedback' in msgs[0]:
+                message.reply(service['feedback'])
+                txt = ('Chat: '+message.chat.title+'  '+str(message.chat.id)+'\n'+
+                       'User: '+usrname+' - '+str(message.from_user.id)+'\n'+
+                       'Text: '+msb.replace('!feedback ', ''))
+                app.send_message(feedback_id, txt)
             else:
                 functions(app, message, chat, service, reply_usrname)
                 adminfuncs(app, chat_id, reply_user_id, nyanpasu_id, 
@@ -100,7 +109,8 @@ with shelve.open('DB') as db:
         
         elif reply_user_id:
             user_rep_change(message, chat, reply_user_id, service, rep_usr_name)
-
+        
+        app.read_history(chat_id)
         db[chat_id] = chat
         db.sync()
     

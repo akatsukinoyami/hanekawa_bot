@@ -6,7 +6,7 @@ import re
 now = round(time.time())
 
 def replaier(chat, app, chat_id, msg, msg_id):
-    print('greetad at '+str(chat_id)+' - '+str(msg_id))
+    print('triggered at '+str(chat_id)+' - '+str(msg_id))
     for triggers, reaction in reacts[chat.lang][chat.mood].items():
                 for trigger in triggers:
                     if re.search(r'\b'+trigger, msg):
