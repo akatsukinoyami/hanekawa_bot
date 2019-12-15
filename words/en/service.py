@@ -38,6 +38,7 @@ service = {
 	'karma_err'		: 'Error. You need reply to message.',
 	'karma_ch'		: ("'Karma of '+user.usern+' changed to '+n"),
 	'perm_er'		: 'You have not permission to do that',
+	'nyan_admin_err': 'I need admin rights for that',
 	'count'			: 'Chat settings: ',
 	'nyanc'			: 'Cuteness: ',
 	'lewdc'			: 'Lewdness: ',
@@ -49,33 +50,32 @@ service = {
 	'rand_next'		: 'Your random number almost ready.',
 	'rand_result'	: 'Random result between ',
 	'&'				: ' and ',
-	'rand_error'	: 'Incorrect values. \n Try this: \n !rand 5 10',
+	'rand_error'	: 'Incorrect values. \n Try this: !rand 5 10',
+	'choice1'		: 'From sequence: ',
+	'choice2'		: '\nChosen element: ',
 	'trans_start'	: 'One second, translating',
 	'trans_next'	: ' asked me to translate: \n',
 	'sprec_start'	: 'The voice message is taken for processing.',
 	'id_error'		: 'Error finding ID',
-	'helpe'			: """Help 
-!exch "№" "from" "to"(or auto)
+	'helpe'			: """!exch "№" "from" "to"(or auto)
 !exch add "currency" - add currency in auto
 !exch del "currency" - delete currency from auto
 """,
-	'help'			: """Help 
-!help - this help
+	'help'			: """!help - this help
 !exch help - help for currency exchange
 !config help - help for admin functions
 !user help - help for user configs
-!ut help - help fo youtube-dl module
+!ut help - help for youtube-dl module
+!rand help - help for random module
 !stats - Show stats of chat
 !admins - admins of chat
 !karma - Show reputation
 !karma - show karma of user reply to
 !tts "lang" - text-to-speech
-!rand "fm" "to" - random in from to number
 !translate "lang" - translate msg or reply
 !trans "lang" или !tl "lang" 
 """,
-	'help_admin'	: """Help 
-!config lang - set up language (ru, en)
+	'help_admin'	: """!config lang - set up language (ru, en)
 !config mood - change mode of replier (nyan, lewd, brut, scar)
 !config greet - set up greeting for new chat member
 !config greet on/off - turn on/off greeting
@@ -85,14 +85,14 @@ service = {
 !config set_zero - set all mood modificators to zero
 !setkarma n - set karma of user reply to
 """,
-	'help_usr_set'	: """Help 
-!user cond on/off - turn on/off replier for yourself
+	'help_usr_set'	: """!user cond on/off - turn on/off replier for yourself
 !user shipper on/off - turn on/off shipper for yourself""",
-	'help_youtube'	: """Help
-!ut vid (link) - download to telegram (480р)
+	'help_youtube'	: """!ut vid (link) - download to telegram (480р)
 !ut vid (res) (link) - download in given resolution
 !ut aud (link) - download audio
 !ut link (link) - direct link on video 480р)
 !ut link (res) (link) - direct link in given resolution
 For (res) - 144, 240, 360, 480, 720, 1080, 1440, 2160""",
+	'help_rand'		: """!rand choice (words) - select 1 word from sequence
+!rand "fm" "to" - random in from to number""",
 }

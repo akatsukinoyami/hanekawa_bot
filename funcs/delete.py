@@ -10,7 +10,6 @@ def edit_buff_nyan(app, chat_id, msg_id):
     app.delete_messages(chat_id, msg_id)
 
 def delete(app, chat_id, c, uid):
-    c = int(c)+1
     for message in app.iter_history(chat_id, 100):
         if str(message.from_user.id) == uid:
             a = message.message_id
@@ -19,11 +18,21 @@ def delete(app, chat_id, c, uid):
             c = c - 1
             if c == 0: break
 
-def del_nyanpasu(app, chat_id, mmbr, msgs):
-    if (str(mmbr.id) == str(katsu_id) 
-    or str(mmbr.id) == nyanpasu_id):
-        app.send_message(chat_id, 'Удаляю.')
-        delete(app, chat_id, msgs[1], str(nyanpasu_id))
+def del_nyanpasu(app, chat_id, msgs, msg_id, n, k, nyanpasu_stat):
+    app.send_message(chat_id, 'Удаляю.')
+    c = int(msgs[1])+1
+    if msgs[0] in '!rmh':
+        delete(app, chat_id, c, n)
+        k_k = 1
+    elif msgs[0] in '!rmk':
+        delete(app, chat_id, 1, n)
+        k_k = c
+    elif msgs[0] in '!rma ':
+        delete(app, chat_id, c, n)
+        k_k = c
+        
+    if nyanpasu_stat == 'administrator':
+        delete(app, chat_id, k_k, k)
 
 def del_katsu(app, chat_id, msgs):
     delete(app, chat_id, msgs[1], str(katsu_id))
